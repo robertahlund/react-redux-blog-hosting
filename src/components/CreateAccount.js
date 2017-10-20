@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 
-const db = firebase.firestore();
-
 class CreateAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
       form: {
         username: '',
-        password: ''
+        password: '',
+        name: '',
+        photoURL: ''
       }
     }
   }
@@ -27,22 +27,26 @@ class CreateAccount extends Component {
   createAccount = () => {
     const userName = this.state.form.username;
     const userPassword = this.state.form.password;
-    console.log(userName, userPassword)
+    const userRealName = this.state.form.name;
+    const userProfilePicture = this.state.form.photoURL;
     firebase.auth().createUserWithEmailAndPassword(userName, userPassword)
+      .then(() => {
+        const user = firebase.auth().currentUser;
+        user.updateProfile({
+          displayName: userRealName,
+          photoURL: userProfilePicture
+        }).then(() => {
+          console.log('User successfully created.')
+        }).catch(error => {
+          console.log(error)
+        });
+      })
       .catch(error => {
         console.log(error);
       });
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log(user, '----')
-      } else {
-        console.log('ingen inloggad')
-      }
-    });
   };
 
   render() {
-    console.log(this.props)
     return (
       <section className="new-post">
         <header className="header">
@@ -51,6 +55,12 @@ class CreateAccount extends Component {
         </header>
         <div className="new-post-form">
           <form>
+            <label htmlFor="name">Name</label>
+            <input id="name" type="text" data-change="name" value={this.state.form.name}
+                   onChange={this.handleFormChange} className="new-post-input" placeholder="John Doe"/>
+            <label htmlFor="photoURL">Profile</label>
+            <input id="photoURL" type="text" data-change="photoURL" value={this.state.form.photoURL}
+                   onChange={this.handleFormChange} className="new-post-input" placeholder="https://image.com/image.png"/>
             <label htmlFor="username">Username</label>
             <input id="username" type="text" data-change="username" value={this.state.form.username}
                    onChange={this.handleFormChange} className="new-post-input"/>
@@ -58,7 +68,7 @@ class CreateAccount extends Component {
             <input id="password" type="password" data-change="password" value={this.state.form.password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
-              <button type="button" onClick={this.createAccount} className="button button-align-right">Log in</button>
+            <button type="button" onClick={this.createAccount} className="button button-align-right">Log in</button>
           </form>
         </div>
       </section>

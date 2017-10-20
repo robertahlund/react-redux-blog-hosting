@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import firebase from '../firebaseConfig';
 
 class Menu extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  handleLogout = () => {
+    firebase.auth().signOut().then(() => {
+      console.log('you are logged out.')
+    }).catch(error => {
+      console.log(error)
+    });
+  };
 
   render() {
     return (
@@ -23,7 +28,7 @@ class Menu extends Component {
             {!this.props.auth ? (
               <li><Link to="/login">Log in</Link></li>
             ) : (
-              <li onClick={this.props.handleLogout}><a>Log out</a></li>
+              <li onClick={this.handleLogout}><a>Log out</a></li>
             )}
           </ul>
         </div>

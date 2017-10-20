@@ -16,42 +16,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: {
-        username: '',
-        password: ''
-      },
       auth: false
     }
   }
-
-  handleFormChange = (event) => {
-    const target = event.target.getAttribute('data-change');
-    const formValues = this.state.form;
-    formValues[target] = event.target.value;
-    this.setState({
-      form: formValues
-    });
-  };
-
-  handleLogin = () => {
-    const userName = this.state.form.username;
-    const userPassword = this.state.form.password;
-    firebase.auth().signInWithEmailAndPassword(userName, userPassword)
-      .then(() => {
-        console.log('success????')
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  };
-
-  handleLogout = () => {
-    firebase.auth().signOut().then(() => {
-      console.log('you are logged out.')
-    }).catch(error => {
-      console.log(error)
-    });
-  };
 
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged(user => {
@@ -108,23 +75,23 @@ class App extends Component {
       <div className="App">
         <Menu
           auth={this.state.auth}
-          handleLogout={this.handleLogout}
         />
         <Switch>
           <Route exact path="/" component={Home}/>
           <Route path="/login" render={props => (
             !this.state.auth ? (
-            <Login
-              {...props}
-              handleLogin={this.handleLogin}
-              handleFormChange={this.handleFormChange}
-              form={this.state.form}
-            />
+              <Login/>
             ) : (
               <Redirect to="/"/>
             )
           )}/>
-          <Route exact path="/create-account" component={CreateAccount}/>
+          <Route path="/create-account" render={props => (
+            !this.state.auth ? (
+              <CreateAccount/>
+            ) : (
+              <Redirect to="/"/>
+            )
+          )}/>
           <Route path="/new-post" component={NewBlogPost}/>
           <Route path="/blog/:user" component={AllPosts}/>
         </Switch>

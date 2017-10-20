@@ -3,6 +3,7 @@ import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 
 const db = firebase.firestore();
+
 //TODO handle comments
 
 class AllPosts extends Component {
@@ -16,26 +17,27 @@ class AllPosts extends Component {
   }
 
   componentDidMount = () => {
-    console.log(this.props)
+    console.log(this.props.match.params.user, 'param')
     const postsRef = db.collection('posts');
     let allPosts = [];
-    postsRef.onSnapshot(querySnapshot => {
-      allPosts = [];
-      //console.log(querySnapshot.docs);
-      querySnapshot.forEach((doc) => {
-        const postData = doc.data();
-        postData.id = doc.id;
-        allPosts.push(postData);
-      });
-      const sortByTime = allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
-      console.log(sortByTime);
-      this.setState({
-        allPosts: sortByTime,
-        loading: false
+    postsRef.get()
+      .then((querySnapshot => {
+        allPosts = [];
+        //console.log(querySnapshot.docs);
+        querySnapshot.forEach(doc => {
+          const postData = doc.data();
+          postData.id = doc.id;
+          allPosts.push(postData);
+        });
+        const sortByTime = allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
+        console.log(sortByTime);
+        this.setState({
+          allPosts: sortByTime,
+          loading: false
+        })
+      }), error => {
+        console.log(error)
       })
-    }, error => {
-      console.log(error)
-    })
   };
 
   render() {
@@ -45,8 +47,7 @@ class AllPosts extends Component {
           <span className="jam jam-document"></span>
           <h1>All posts</h1>
         </header>
-        {/*//TODO skapa fin animation*/}
-        {this.state.loading ? (<p>Loading</p>) : null}
+        {this.state.loading ? (<div className="loader"></div>) : null}
         {this.state.allPosts.map((post, index) => {
           return (
             <div className="post" key={index} data-post-id={post.id}>
