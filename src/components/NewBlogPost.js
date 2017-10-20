@@ -12,10 +12,22 @@ class NewBlogPost extends Component {
         title: '',
         tags: '',
         content: '',
-        comments: []
-      }
+        comments: [],
+        author: ''
+      },
+      username: ''
     }
   }
+
+  componentDidMount = () => {
+    const user = firebase.auth().currentUser;
+    if (user !== null) {
+      const author = firebase.auth().currentUser.email.split('@')[0];
+      this.setState({
+        username: author
+      })
+    }
+  };
 
   handleFormChange = (event) => {
     const target = event.target.getAttribute('data-change');
@@ -32,6 +44,7 @@ class NewBlogPost extends Component {
     formValues.tags.splice(0, 1);
     formValues.content.indexOf('\n') > -1 ? formValues.content = formValues.content.split('\n') : formValues.content = [formValues.content];
     formValues.time = new Date().toLocaleString();
+    formValues.author = this.state.username;
 
     this.setState({
       post: formValues,
@@ -42,8 +55,8 @@ class NewBlogPost extends Component {
       }
     });
 
-    const postsRef = db.collection('posts');
-    postsRef.add(formValues)
+    const databaseRef = db.collection('posts');
+    databaseRef.add(formValues)
       .then(function (result) {
         console.log("Document written with ID: ", result.id);
       })
@@ -71,7 +84,8 @@ class NewBlogPost extends Component {
                       value={this.state.form.content} onChange={this.handleFormChange}
                       className="new-post-textarea"/>
             <label htmlFor="tags">Tags</label>
-            <input id="tags" type="text" data-change="tags" placeholder="Tags" value={this.state.form.tags}
+            <input id="tags" type="text" data-change="tags" placeholder="#tags #go #like #this #or this"
+                   value={this.state.form.tags}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
             <button type="button" onClick={this.submitPost} className="button new-post-button">Post</button>

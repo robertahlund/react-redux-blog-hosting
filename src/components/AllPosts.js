@@ -18,16 +18,18 @@ class AllPosts extends Component {
 
   componentDidMount = () => {
     console.log(this.props.match.params.user, 'param')
-    const postsRef = db.collection('posts');
     let allPosts = [];
-    postsRef.get()
-      .then((querySnapshot => {
+    const authorToGetPostsFrom = this.props.match.params.user;
+    const databaseRef = db.collection('posts').where('author', '==', authorToGetPostsFrom);
+    databaseRef
+      .get()
+      .then(querySnapshot => {
         allPosts = [];
-        //console.log(querySnapshot.docs);
         querySnapshot.forEach(doc => {
           const postData = doc.data();
           postData.id = doc.id;
           allPosts.push(postData);
+          console.log(doc.id, " => ", doc.data());
         });
         const sortByTime = allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
         console.log(sortByTime);
@@ -35,9 +37,10 @@ class AllPosts extends Component {
           allPosts: sortByTime,
           loading: false
         })
-      }), error => {
-        console.log(error)
       })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      });
   };
 
   render() {
@@ -59,7 +62,7 @@ class AllPosts extends Component {
               })}
               <div className="post-footer">
                 <a className="comments">{post.comments ? post.comments.length + ' comments' : '0 comments'}</a>
-                <span className="time">{post.time}</span>
+                <span className="time">{/*Posted by <a>{post.author}</a>*/} {post.time}</span>
               </div>
             </div>
           );

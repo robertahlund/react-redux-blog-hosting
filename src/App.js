@@ -23,12 +23,12 @@ class App extends Component {
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user, '----')
+        console.log(user, 'auth change user');
         this.setState({
           auth: user
         })
       } else {
-        console.log('ingen inloggad')
+        console.log('ingen inloggad');
         this.setState({
           auth: false
         })
@@ -68,7 +68,7 @@ class App extends Component {
     //     });
     //   });
 
-  }
+  };
 
   render() {
     return (
@@ -92,8 +92,19 @@ class App extends Component {
               <Redirect to="/"/>
             )
           )}/>
-          <Route path="/new-post" component={NewBlogPost}/>
-          <Route path="/blog/:user" component={AllPosts}/>
+          <Route path="/new-post" render={props => (
+            this.state.auth ? (
+              <NewBlogPost
+                {...props}
+                auth={this.state.auth}
+              />
+            ) : (
+              <Redirect to="/"/>
+            )
+          )}/>
+          <Route path="/blog/:user" render={props => (
+              <AllPosts {...props}/>
+          )}/>
         </Switch>
       </div>
     );

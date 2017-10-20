@@ -32,7 +32,6 @@ class Login extends Component {
   };
 
   render() {
-    console.log(this.props)
     return (
       <section className="new-post">
         <header className="header">
