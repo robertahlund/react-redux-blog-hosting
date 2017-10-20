@@ -1,0 +1,201 @@
+$form-padding: 10px;
+$form-margin: 5px 0 12px 0;
+$global-font-size: 1em;
+$global-letter-spacing: .05em;
+$global-border-radius: 4px;
+$global-border: 1px solid #d1d1d1;
+$global-line-height: 1.7em;
+$center: 0 auto;
+$global-font-color: #606c76;
+$primary-color: #9b4dca;
+$secondary-color: #f4f5f6;
+$global-font-weight: 300;
+$button-hover-color: #606c76;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  letter-spacing: $global-letter-spacing;
+  font-weight: $global-font-weight;
+  color: $global-font-color;
+  line-height: $global-line-height;
+}
+
+body {
+  font-size: $global-font-size;
+}
+
+.menu {
+  background-color: $secondary-color;
+  border-bottom: 1px solid #d1d1d1;
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin: $center;
+  }
+}
+
+.menu {
+  ul {
+    list-style: none;
+    li {
+      padding: 30px 20px;
+      display: inline-block;
+      transition: color .3s;
+      cursor: pointer;
+    }
+    li:last-child {
+      padding: 30px 0 30px 20px;
+    }
+  }
+}
+
+li {
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+a {
+  transition: color .3s;
+  color: $primary-color;
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: $global-font-color;
+  }
+}
+
+.logo {
+  padding: 30px 20px 30px 0;
+  .jam-book {
+    color: $primary-color;
+    font-size: 1.2em;
+    vertical-align: -4px;
+    padding-right: 2px;
+  }
+}
+
+.button {
+  border: none;
+  width: 250px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.1rem;
+  font-size: .8rem;
+  background: $primary-color;
+  margin-top: 12px;
+  transition: background .3s;
+  cursor: pointer;
+  padding: $form-padding;
+  display: block;
+  border: 0;
+  border-radius: $global-border-radius;
+  outline: 0;
+  &:hover {
+    background: $button-hover-color;
+  }
+}
+
+.header {
+  background-color: $secondary-color;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    font-size: 1.8em;
+    letter-spacing: -0.04em;
+  }
+  .jam-pencil {
+    padding-bottom: 20px;
+    color: $primary-color;
+    font-size: 4em;
+  }
+  .jam-document {
+    @extend .jam-pencil;
+    padding-left: 5px;
+  }
+  .jam-padlock, .jam-home, .jam-user {
+    @extend .jam-pencil
+  }
+}
+
+.new-post-form {
+  width: 90%;
+  margin: $center;
+  padding: 50px 0;
+}
+
+label {
+  font-weight: 400;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin: $center;
+}
+
+.new-post-input {
+  padding: $form-padding;
+  display: block;
+  width: 100%;
+  margin: $form-margin;
+  border: $global-border;
+  border-radius: $global-border-radius;
+  outline: 0;
+  transition: border .3s;
+  font-size: 1em;
+
+  &:focus {
+    border: 1px solid $primary-color;
+  }
+}
+
+.button-align-right, .new-post-button {
+  @extend .button;
+  align-self: flex-end;
+}
+
+.new-post-textarea {
+  @extend .new-post-input;
+}
+
+.post {
+  @extend .new-post-form;
+  width: 50%;
+  border-left: 2px solid $primary-color;
+  padding: 0 0 0 30px;
+  margin: 100px auto;
+  h3 {
+    font-size: 1.4em;
+    letter-spacing: -0.02em;
+    text-align: center;
+    padding-bottom: 20px;
+    margin-left: -32px;
+  }
+  p {
+    padding: 20px 0;
+  }
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0 0 0;
+  }
+}
+
+.log-in-form-bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  a {
+    margin-top: 12px;
+  }
+}
