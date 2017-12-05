@@ -2,15 +2,17 @@ import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 
+const db = firebase.firestore();
+
 class CreateAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
       form: {
-        username: '',
+        email: '',
         password: '',
         name: '',
-        photoURL: ''
+        blogName: ''
       }
     }
   }
@@ -25,18 +27,31 @@ class CreateAccount extends Component {
   };
 
   createAccount = () => {
-    const userName = this.state.form.username;
+    const userEmail = this.state.form.email;
     const userPassword = this.state.form.password;
     const userRealName = this.state.form.name;
-    const userProfilePicture = this.state.form.photoURL;
-    firebase.auth().createUserWithEmailAndPassword(userName, userPassword)
+    const userBlogName = this.state.form.blogName;
+    firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword)
       .then(() => {
         const user = firebase.auth().currentUser;
         user.updateProfile({
-          displayName: userRealName,
-          photoURL: userProfilePicture
+          displayName: userRealName
         }).then(() => {
-          console.log('User successfully created.')
+          console.log('User successfully created.');
+          const userInformation = {
+            name: user.displayName,
+            uid: user.uid,
+            email: user.email,
+            blogName: userBlogName
+          };
+          const databaseRef = db.collection('users').doc(user.uid);
+          databaseRef.set(userInformation)
+            .then(() => {
+              console.log('collection was written')
+            })
+            .catch(error => {
+              console.error("Error adding document: ", error);
+            });
         }).catch(error => {
           console.log(error)
         });
@@ -55,20 +70,20 @@ class CreateAccount extends Component {
         </header>
         <div className="new-post-form">
           <form>
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Full name</label>
             <input id="name" type="text" data-change="name" value={this.state.form.name}
-                   onChange={this.handleFormChange} className="new-post-input" placeholder="John Doe"/>
-            <label htmlFor="photoURL">Profile</label>
-            <input id="photoURL" type="text" data-change="photoURL" value={this.state.form.photoURL}
-                   onChange={this.handleFormChange} className="new-post-input" placeholder="https://image.com/image.png"/>
-            <label htmlFor="username">Username</label>
-            <input id="username" type="text" data-change="username" value={this.state.form.username}
+                   onChange={this.handleFormChange} className="new-post-input" placeholder="Name Lastname"/>
+            <label htmlFor="name">Name your blog</label>
+            <input id="name" type="text" data-change="blogName" value={this.state.form.blogName}
+                   onChange={this.handleFormChange} className="new-post-input" placeholder="Names blog"/>
+            <label htmlFor="username">Email</label>
+            <input id="username" type="text" data-change="email" value={this.state.form.email}
                    onChange={this.handleFormChange} className="new-post-input"/>
             <label htmlFor="password">Password</label>
             <input id="password" type="password" data-change="password" value={this.state.form.password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
-            <button type="button" onClick={this.createAccount} className="button button-align-right">Log in</button>
+            <button type="button" onClick={this.createAccount} className="button button-align-right">Create account</button>
           </form>
         </div>
       </section>

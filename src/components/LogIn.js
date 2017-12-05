@@ -40,7 +40,7 @@ class Login extends Component {
         </header>
         <div className="new-post-form">
           <form>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Email</label>
             <input id="username" type="text" data-change="username" value={this.state.form.username}
                    onChange={this.handleFormChange} className="new-post-input"/>
             <label htmlFor="password">Password</label>

@@ -10,7 +10,7 @@ import Login from "./components/LogIn";
 import Home from "./components/Home";
 import CreateAccount from "./components/CreateAccount";
 
-// const db = firebase.firestore();
+const db = firebase.firestore();
 
 class App extends Component {
   constructor(props) {
@@ -23,10 +23,23 @@ class App extends Component {
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user, 'auth change user');
-        this.setState({
-          auth: user
-        })
+        const databaseRef = db.collection('users').doc(user.uid);
+        databaseRef
+          .get()
+          .then(userData => {
+            if (userData.exists) {
+              console.log("Document data:", userData.data());
+              const userInformation = user;
+              userInformation.userData = userData.data();
+              this.setState({
+                auth: userInformation
+              })
+            } else {
+              console.log("No such document!");
+            }
+          }).catch(error => {
+          console.log("Error getting document:", error);
+        });
       } else {
         console.log('ingen inloggad');
         this.setState({
@@ -34,40 +47,6 @@ class App extends Component {
         })
       }
     });
-    // console.log(window.location.pathname)
-    // const getUserFromUrl = window.location.pathname.split('/')[2];
-    // console.log(getUserFromUrl)
-    // window.setTimeout(() => {
-    // })
-
-
-    // const usersRef = db.collection('users');
-    // usersRef.add({
-    //   first: "Alan",
-    //   middle: "Mathison",
-    //   last: "Turing",
-    //   born: 1912,
-    //   categories: {
-    //     tech: true,
-    //     politics: true
-    //   }
-    // })
-    //   .then(function (result) {
-    //     console.log("Document written with ID: ", result.id);
-    //   })
-    //   .catch(function (error) {
-    //     console.error("Error adding document: ", error);
-    //   });
-    //
-    // usersRef.where('categories.tech', '==', true).get()
-    //   .then((querySnapshot) => {
-    //     console.log(querySnapshot.docs)
-    //     querySnapshot.forEach((doc) => {
-    //       console.log(doc.data())
-    //       console.log(`${doc.id} => ${doc.data()}`);
-    //     });
-    //   });
-
   };
 
   render() {
@@ -102,8 +81,10 @@ class App extends Component {
               <Redirect to="/"/>
             )
           )}/>
-          <Route path="/blog/:user" render={props => (
-              <AllPosts {...props}/>
+          <Route path="/blog/:uid/:blogName" render={props => (
+            <AllPosts
+              {...props}
+              auth={this.state.auth}/>
           )}/>
         </Switch>
       </div>

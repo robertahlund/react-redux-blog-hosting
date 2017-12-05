@@ -13,18 +13,22 @@ class NewBlogPost extends Component {
         tags: '',
         content: '',
         comments: [],
-        author: ''
+        author: '',
+        authorUid: ''
       },
-      username: ''
+      author: '',
+      authorUid: ''
     }
   }
 
   componentDidMount = () => {
     const user = firebase.auth().currentUser;
     if (user !== null) {
-      const author = firebase.auth().currentUser.email.split('@')[0];
+      const author = firebase.auth().currentUser.displayName;
+      const authorUid = firebase.auth().currentUser.uid;
       this.setState({
-        username: author
+        author: author,
+        authorUid: authorUid
       })
     }
   };
@@ -40,11 +44,12 @@ class NewBlogPost extends Component {
 
   submitPost = () => {
     const formValues = this.state.form;
-    formValues.tags = formValues.tags.split(/\s*#[#\s]*/).join('#').split('#');
+    formValues.tags = formValues.tags.split(/\s*#[#\s]*/).join('#').toLowerCase().split('#');
     formValues.tags.splice(0, 1);
     formValues.content.indexOf('\n') > -1 ? formValues.content = formValues.content.split('\n') : formValues.content = [formValues.content];
     formValues.time = new Date().toLocaleString();
-    formValues.author = this.state.username;
+    formValues.author = this.state.author;
+    formValues.authorUid = this.state.authorUid;
 
     this.setState({
       post: formValues,
@@ -66,7 +71,6 @@ class NewBlogPost extends Component {
   };
 
   render() {
-    console.log(this.props)
     return (
       <section className="new-post">
         <header className="header">
