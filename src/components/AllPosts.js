@@ -6,8 +6,6 @@ import Comments from "./Comments";
 
 const db = firebase.firestore();
 
-//TODO handle comments
-
 class AllPosts extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +21,6 @@ class AllPosts extends Component {
 
   componentDidMount = () => {
     console.log(this.props.match.params.uid, 'uid param');
-    console.log(this.props.match.params.blogName, 'param')
     let allPosts = [];
     const authorToGetPostsFrom = this.props.match.params.uid;
     const databaseRef = db.collection('posts').where('authorUid', '==', authorToGetPostsFrom);
@@ -103,8 +100,24 @@ class AllPosts extends Component {
         searchResultLength: findPosts.length
       });
       event.preventDefault();
-      console.log(findPosts)
     }
+  };
+
+  handleSearchByTag = event => {
+    const {target} = event;
+    const searchForThisTag = target.innerText.split('#')[1];
+    const allPosts = this.state.allPostsClone;
+    const findPosts = allPosts.filter(post => {
+      const {tags} = post;
+      return (
+        tags.includes(searchForThisTag)
+      )
+    });
+    this.setState({
+      allPosts: findPosts,
+      searchResultLength: findPosts.length
+    });
+    console.log(findPosts)
   };
 
   render() {
@@ -136,12 +149,12 @@ class AllPosts extends Component {
                 );
               })}
               {post.tags.length > 0 ? (
-              <span className="tags">Tags:
-                {post.tags.map((tag, index) => {
-                  return (
-                    <a key={index}>{' #' + tag}</a>
-                  );
-                })}
+                <span className="tags">Tags:
+                  {post.tags.map((tag, index) => {
+                    return (
+                      <a key={index} onClick={this.handleSearchByTag}>{' #' + tag}</a>
+                    );
+                  })}
                </span>
               ) : (null)}
               <div className="post-footer">

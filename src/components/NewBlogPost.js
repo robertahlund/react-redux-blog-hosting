@@ -63,7 +63,7 @@ class NewBlogPost extends Component {
     const databaseRef = db.collection('posts');
     databaseRef.add(formValues)
       .then(function (result) {
-        console.log("Document written with ID: ", result.id);
+        console.log("Document written with ID: ", result.id, result);
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);

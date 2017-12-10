@@ -34,12 +34,14 @@ class CommentForm extends Component {
   submitPost = () => {
     const postId = this.state.postId;
     const databaseRef = db.collection('posts').doc(postId);
-    const author = this.props.auth.userData.name;
+    console.log(this.props.auth.userData, 'datatatata');
+    const {name, uid} = this.props.auth.userData;
     console.log(postId, databaseRef);
     const newComment = {
       title: this.state.form.title,
       content: this.state.form.content,
-      author: author,
+      author: name,
+      authorUid: uid,
       time: new Date().toLocaleString()
     };
     let existingComments;
