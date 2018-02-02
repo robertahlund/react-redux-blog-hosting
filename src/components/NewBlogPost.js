@@ -42,7 +42,7 @@ class NewBlogPost extends Component {
     });
   };
 
-  submitPost = () => {
+  submitPost = async () => {
     const formValues = this.state.form;
     formValues.tags = formValues.tags.split(/\s*#[#\s]*/).join('#').toLowerCase().split('#');
     formValues.tags.splice(0, 1);
@@ -56,18 +56,21 @@ class NewBlogPost extends Component {
       form: {
         title: '',
         tags: '',
-        content: ''
+        content: '',
+        comments: [],
+        author: '',
+        authorUid: ''
       }
     });
 
     const databaseRef = db.collection('posts');
-    databaseRef.add(formValues)
-      .then(function (result) {
-        console.log("Document written with ID: ", result.id, result);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
+    try {
+      const result = await databaseRef.add(formValues);
+      console.log("Document written with ID: ", result.id, result);
+    }
+    catch (error) {
+      console.log(error)
+    }
   };
 
   render() {

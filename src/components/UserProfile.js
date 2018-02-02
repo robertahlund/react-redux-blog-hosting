@@ -4,7 +4,7 @@ import 'firebase/firestore';
 
 const db = firebase.firestore();
 
-class CreateAccount extends Component {
+class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,6 +17,29 @@ class CreateAccount extends Component {
     }
   }
 
+  componentDidMount = async () => {
+    const profileUid = this.props.match.params.uid;
+    const databaseRef = db.collection('users').where('uid', '==', profileUid);
+    try {
+      const userData = await databaseRef.get();
+      userData.forEach(user => {
+        const {email, name, blogName} = user.data();
+        this.setState({
+          form: {
+            email: email,
+            name: name,
+            blogName: blogName.split(/[-]/).join(" "),
+            password: ''
+          }
+        });
+        console.log(user.id, " => ", user.data());
+      });
+    }
+    catch (error) {
+      console.log(error)
+    }
+  };
+
   handleFormChange = (event) => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;
@@ -26,30 +49,8 @@ class CreateAccount extends Component {
     });
   };
 
-  createAccount = async () => {
-    const {email, password, name} = this.state.form;
-    const blogName = this.state.form.blogName.split(/\s/).join("-");
-    try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      console.log("1")
-      const user = firebase.auth().currentUser;
-      await user.updateProfile({
-        displayName: name
-      });
-      console.log("2")
-      const userInformation = {
-        name: user.displayName,
-        uid: user.uid,
-        email: user.email,
-        blogName: blogName
-      };
-      const databaseRef = db.collection('users').doc(user.uid);
-      await databaseRef.set(userInformation);
-      console.log('User successfully created.');
-    }
-    catch (error) {
-      console.log(error);
-    }
+  updateAccountInfo = () => {
+
   };
 
   render() {
@@ -57,16 +58,18 @@ class CreateAccount extends Component {
       <section className="new-post">
         <header className="header">
           <span className="jam jam-user"></span>
-          <h1>Create an account</h1>
+          {this.props.auth && this.props.auth.userData.uid === this.props.match.params.uid ?
+            (<h1>Edit your profile</h1>) :
+            (<h1>{this.state.form.name}</h1>)}
         </header>
         <div className="new-post-form">
-          <form>
+          <form autoComplete="off">
             <label htmlFor="name">Full name</label>
             <input id="name" type="text" data-change="name" value={this.state.form.name}
-                   onChange={this.handleFormChange} className="new-post-input" placeholder="Name Lastname"/>
-            <label htmlFor="name">Name your blog</label>
+                   onChange={this.handleFormChange} className="new-post-input"/>
+            <label htmlFor="name">Blog name</label>
             <input id="blogname" type="text" data-change="blogName" value={this.state.form.blogName}
-                   onChange={this.handleFormChange} className="new-post-input" placeholder="En kass blogg"/>
+                   onChange={this.handleFormChange} className="new-post-input"/>
             <label htmlFor="username">Email</label>
             <input id="username" type="text" data-change="email" value={this.state.form.email}
                    onChange={this.handleFormChange} className="new-post-input"/>
@@ -74,7 +77,9 @@ class CreateAccount extends Component {
             <input id="password" type="password" data-change="password" value={this.state.form.password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
-            <button type="button" onClick={this.createAccount} className="button button-align-right">Create account</button>
+            <button type="button" onClick={this.updateAccountInfo}
+                    className="button button-align-right update-profile">Update account information
+            </button>
           </form>
         </div>
       </section>
@@ -82,4 +87,4 @@ class CreateAccount extends Component {
   }
 }
 
-export default CreateAccount;
+export default UserProfile;

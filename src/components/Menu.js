@@ -5,18 +5,16 @@ import firebase from '../firebaseConfig';
 class Menu extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      blogName: '',
-      uid: ''
-    }
   }
 
-  handleLogout = () => {
-    firebase.auth().signOut().then(() => {
+  handleLogout = async () => {
+    try {
+      await firebase.auth().signOut();
       console.log('you are logged out.')
-    }).catch(error => {
+    }
+    catch (error) {
       console.log(error)
-    });
+    }
   };
 
   render() {
@@ -42,7 +40,11 @@ class Menu extends Component {
               null
             )}
             <li>Browse users?</li>
-            <li>User profile?</li>
+            {this.props.auth ? (
+              <li><Link to={`/user/${uid}`}>Profile</Link></li>
+            ) : (
+              null
+            )}
             {!this.props.auth ? (
               <li><Link to="/login">Log in</Link></li>
             ) : (

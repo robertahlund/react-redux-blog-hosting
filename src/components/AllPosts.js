@@ -15,12 +15,21 @@ class AllPosts extends Component {
       loading: true,
       commentsToLoad: '',
       searchOpen: false,
-      searchValue: ''
+      searchValue: '',
+      currentBlogData: {
+        blogName: '',
+        blogUid: ''
+      }
     }
   }
 
   componentDidMount = () => {
-    console.log(this.props.match.params.uid, 'uid param');
+    this.setState({
+      currentBlogData: {
+        blogName: this.props.match.params.blogName.split(/[-]/).join(" "),
+        blogUid: this.props.match.params.uid
+      }
+    });
     let allPosts = [];
     const authorToGetPostsFrom = this.props.match.params.uid;
     const databaseRef = db.collection('posts').where('authorUid', '==', authorToGetPostsFrom);
@@ -73,7 +82,9 @@ class AllPosts extends Component {
   toggleSearch = () => {
     this.setState({
       searchOpen: !this.state.searchOpen
-    })
+    }, () => {
+      this.searchInput.focus();
+    });
   };
 
   handleSearchInput = event => {
@@ -100,6 +111,7 @@ class AllPosts extends Component {
         searchResultLength: findPosts.length
       });
       event.preventDefault();
+
     }
   };
 
@@ -120,25 +132,35 @@ class AllPosts extends Component {
     console.log(findPosts)
   };
 
+  closeSearch = () => {
+    this.setState({
+      searchOpen: false
+    })
+  };
+
   render() {
+    const {blogName} = this.state.currentBlogData;
     return (
       <section className="all-posts">
         <header className="header">
           <span className="jam jam-document"></span>
-          <h1>All posts</h1>
+          <h1>{blogName}</h1>
         </header>
         <div className="search-container">
           {this.state.searchResultLength > 0 && this.state.searchResultLength !== this.state.allPostsClone.length ?
             (<p>{"Found " + this.state.searchResultLength + " results."}</p>)
             :
             (null)}
-          <input type="text" onChange={this.handleSearchInput} onKeyDown={this.handleSearch}
+          <input type="text" onChange={this.handleSearchInput} onKeyDown={this.handleSearch} onBlur={this.closeSearch}
+                 ref={input => this.searchInput = input}
                  value={this.state.searchValue}
                  className={this.state.searchOpen ? 'search-input' : 'hidden-input'}
                  placeholder="Search for tags and titles."/>
           <span className="jam jam-search" onClick={this.toggleSearch}></span>
         </div>
         {this.state.loading ? (<div className="loader"></div>) : null}
+        {this.state.allPosts.length === 0 && !this.state.loading &&
+        <p className="center">This user has not posted anything :(</p>}
         {this.state.allPosts.map((post, index) => {
           return (
             <div className="post" key={index} data-post-id={post.id}>

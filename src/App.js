@@ -9,7 +9,7 @@ import AllPosts from "./components/AllPosts";
 import Login from "./components/LogIn";
 import Home from "./components/Home";
 import CreateAccount from "./components/CreateAccount";
-import SearchPosts from "./components/SearchPosts";
+import UserProfile from "./components/UserProfile";
 
 const db = firebase.firestore();
 
@@ -87,8 +87,8 @@ class App extends Component {
               {...props}
               auth={this.state.auth}/>
           )}/>
-          <Route path="/blog/:uid/:blogName/search/:searchValue" render={props => (
-            <SearchPosts
+          <Route exact path="/user/:uid" render={props => (
+            <UserProfile
               {...props}
               auth={this.state.auth}/>
           )}/>

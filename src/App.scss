@@ -56,6 +56,10 @@ body {
   }
 }
 
+.center {
+  text-align: center;
+}
+
 .menu {
   background-color: $secondary-color;
   border-bottom: 1px solid #d1d1d1;
@@ -191,6 +195,11 @@ form {
 .button-align-right, .new-post-button {
   @extend .button;
   align-self: flex-end;
+}
+
+.update-profile {
+  @extend .button;
+  width: 280px;
 }
 
 .new-post-textarea {
