@@ -22,7 +22,7 @@ class CommentForm extends Component {
     })
   };
 
-  handleFormChange = (event) => {
+  handleFormChange = event => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;
     formValues[target] = event.target.value;
@@ -31,7 +31,7 @@ class CommentForm extends Component {
     });
   };
 
-  submitPost = () => {
+  submitPost = async () => {
     const postId = this.state.postId;
     const databaseRef = db.collection('posts').doc(postId);
     console.log(this.props.auth.userData, 'datatatata');
@@ -44,31 +44,24 @@ class CommentForm extends Component {
       authorUid: uid,
       time: new Date().toLocaleString()
     };
-    let existingComments;
-    databaseRef.get()
-      .then(querySnapshot => {
-        existingComments = [...querySnapshot.data().comments, newComment];
-        console.log(existingComments);
-        databaseRef.update({
-          comments: existingComments
-        })
-          .then(() => {
-            console.log('update is success')
-            this.setState({
-              form: {
-                title: '',
-                content: '',
-              }
-            })
-          })
-          .catch(error => {
-            console.log(error);
-          });
-        console.log("Current data: ", querySnapshot && querySnapshot.data());
-      })
-      .catch(error => {
-        console.log("Error getting document:", error);
+    try {
+      let existingComments;
+      const querySnapshot = await databaseRef.get();
+      existingComments = [...querySnapshot.data().comments, newComment];
+      console.log(existingComments);
+      await databaseRef.update({
+        comments: existingComments
       });
+      this.setState({
+        form: {
+          title: '',
+          content: '',
+        }
+      })
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   render() {

@@ -22,26 +22,27 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(async user => {
       if (user) {
-        const databaseRef = db.collection('users').doc(user.uid);
-        databaseRef
-          .get()
-          .then(userData => {
-            if (userData.exists) {
-              console.log("Document data:", userData.data());
-              const userInformation = user;
-              userInformation.userData = userData.data();
-              this.setState({
-                auth: userInformation
-              })
-            } else {
-              console.log("No such document!");
-            }
-          }).catch(error => {
+        try {
+          const databaseRef = db.collection('users').doc(user.uid);
+          const userData = await databaseRef.get();
+          if (userData.exists) {
+            console.log("Document data:", userData.data());
+            const userInformation = user;
+            userInformation.userData = userData.data();
+            this.setState({
+              auth: userInformation
+            })
+          } else {
+            console.log("No such document!");
+          }
+        }
+        catch (error) {
           console.log("Error getting document:", error);
-        });
-      } else {
+        }
+      }
+      else {
         console.log('ingen inloggad');
         this.setState({
           auth: false

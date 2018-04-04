@@ -14,29 +14,30 @@ class Comments extends Component {
     }
   }
 
-  componentDidMount = () => {
-    const postId = this.props.postId;
+  componentDidMount = async () => {
+    const {postId} = this.props;
     const databaseRef = db.collection('posts').doc(postId);
+    await databaseRef.onSnapshot(querySnapshot => this.getCommentUpdates(querySnapshot));
+  };
+
+  getCommentUpdates = querySnapshot => {
     let allComments = [];
     this.setState({
       loading: true
     });
-    databaseRef.onSnapshot(querySnapshot => {
-      allComments = [];
-      const postComments = querySnapshot.data().comments;
-      postComments.forEach(comment => {
-        const comments = comment;
-        comments.content = comment.content.split('\n');
-        allComments.push(comments);
-      });
-      const sortByTime = allComments.sort((a, b) => new Date(b.time) - new Date(a.time));
-      this.setState({
-        comments: sortByTime,
-        loading: false
-      })
-    }, error => {
-      console.log("Error getting document:", error);
+    allComments = [];
+    const postComments = querySnapshot.data().comments;
+    postComments.forEach(comment => {
+      const comments = comment;
+      comments.content = comment.content.split('\n');
+      allComments.push(comments);
     });
+    const sortByTime = allComments.sort((a, b) => new Date(b.time) - new Date(a.time));
+    this.setState({
+      comments: sortByTime,
+      loading: false
+    })
+
   };
 
   handleCommentPaginationIncrease = () => {

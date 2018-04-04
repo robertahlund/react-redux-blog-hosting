@@ -10,8 +10,8 @@ class NewBlogPost extends Component {
     this.state = {
       form: {
         title: '',
-        tags: '',
-        content: '',
+        tags: [],
+        content: [],
         comments: [],
         author: '',
         authorUid: ''
@@ -55,8 +55,8 @@ class NewBlogPost extends Component {
       post: formValues,
       form: {
         title: '',
-        tags: '',
-        content: '',
+        tags: [],
+        content: [],
         comments: [],
         author: '',
         authorUid: ''
