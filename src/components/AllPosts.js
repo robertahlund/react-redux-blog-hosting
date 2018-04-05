@@ -23,7 +23,7 @@ class AllPosts extends Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     this.setState({
       currentBlogData: {
         blogName: this.props.match.params.blogName.split(/[-]/).join(" "),
@@ -33,27 +33,26 @@ class AllPosts extends Component {
     let allPosts = [];
     const authorToGetPostsFrom = this.props.match.params.uid;
     const databaseRef = db.collection('posts').where('authorUid', '==', authorToGetPostsFrom);
-    databaseRef
-      .get()
-      .then(querySnapshot => {
-        allPosts = [];
-        querySnapshot.forEach(doc => {
-          const postData = doc.data();
-          postData.id = doc.id;
-          allPosts.push(postData);
-          console.log(doc.id, " => ", doc.data());
-        });
-        const sortByTime = allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
-        console.log(sortByTime);
-        this.setState({
-          allPosts: sortByTime,
-          loading: false,
-          allPostsClone: JSON.parse(JSON.stringify(sortByTime))
-        })
-      })
-      .catch(error => {
-        console.log("Error getting documents: ", error);
+    try {
+      const querySnapshot = await databaseRef.get();
+      allPosts = [];
+      querySnapshot.forEach(doc => {
+        const postData = doc.data();
+        postData.id = doc.id;
+        allPosts.push(postData);
+        console.log(doc.id, " => ", doc.data());
       });
+      const sortByTime = allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
+      console.log(sortByTime);
+      this.setState({
+        allPosts: sortByTime,
+        loading: false,
+        allPostsClone: JSON.parse(JSON.stringify(sortByTime))
+      })
+    }
+    catch (error) {
+      console.log("Error getting documents: ", error);
+    }
   };
 
   handleComments = event => {
@@ -100,7 +99,7 @@ class AllPosts extends Component {
       const searchValueLower = searchValue.toLowerCase();
       const allPosts = this.state.allPostsClone;
       const findPosts = allPosts.filter(post => {
-        const {title, tags, content} = post;
+        const {title, tags} = post;
         return (
           title.toLowerCase().includes(searchValueLower) ||
           tags.includes(searchValueLower)
@@ -110,8 +109,8 @@ class AllPosts extends Component {
         allPosts: findPosts,
         searchResultLength: findPosts.length
       });
+      this.closeSearch();
       event.preventDefault();
-
     }
   };
 
@@ -138,8 +137,19 @@ class AllPosts extends Component {
     })
   };
 
+  displayAllPosts = () => {
+    this.setState({
+      allPosts: this.state.allPostsClone,
+      searchResultLength: null
+    });
+  };
+
   render() {
     const {blogName} = this.state.currentBlogData;
+    const {
+      searchResultLength, allPostsClone, searchValue,
+      searchOpen, loading, allPosts, commentsToLoad
+    } = this.state;
     return (
       <section className="all-posts">
         <header className="header">
@@ -147,21 +157,32 @@ class AllPosts extends Component {
           <h1>{blogName}</h1>
         </header>
         <div className="search-container">
-          {this.state.searchResultLength > 0 && this.state.searchResultLength !== this.state.allPostsClone.length ?
-            (<p>{"Found " + this.state.searchResultLength + " results."}</p>)
+          {searchResultLength > 0 && searchResultLength !== allPostsClone.length ?
+            (
+              <div>
+                <p>{"Found " + searchResultLength + " results."}</p>
+                <a onClick={this.displayAllPosts}>View all posts</a>
+              </div>
+            )
             :
             (null)}
           <input type="text" onChange={this.handleSearchInput} onKeyDown={this.handleSearch} onBlur={this.closeSearch}
                  ref={input => this.searchInput = input}
-                 value={this.state.searchValue}
-                 className={this.state.searchOpen ? 'search-input' : 'hidden-input'}
+                 value={searchValue}
+                 className={searchOpen ? 'search-input' : 'hidden-input'}
                  placeholder="Search for tags and titles."/>
           <span className="jam jam-search" onClick={this.toggleSearch}></span>
         </div>
-        {this.state.loading ? (<div className="loader"></div>) : null}
-        {this.state.allPosts.length === 0 && !this.state.loading &&
+        {loading ? (<div className="loader"></div>) : null}
+        {allPosts.length === 0 && !loading && searchResultLength !== 0 &&
         <p className="center">This user has not posted anything :(</p>}
-        {this.state.allPosts.map((post, index) => {
+        {searchResultLength === 0 &&
+          <div>
+          <p className="center">Your search returned no matches.</p>
+            <a className="center" onClick={this.displayAllPosts}>View all posts</a>
+          </div>}
+        }
+        {allPosts.map((post, index) => {
           return (
             <div className="post" key={index} data-post-id={post.id}>
               <h3>{post.title}</h3>
@@ -182,12 +203,12 @@ class AllPosts extends Component {
               <div className="post-footer">
                 <a data-post-id={post.id}
                    onClick={this.handleComments}>{post.comments ? post.comments.length + ' comments' : '0 comments'}
-                  <span className={this.state.commentsToLoad === post.id ? 'jam jam-angle-top' : 'jam jam-angle-top' +
+                  <span className={commentsToLoad === post.id ? 'jam jam-angle-top' : 'jam jam-angle-top' +
                     ' rotate'}></span>
                 </a>
                 <span className="time">{/*Posted by <a>{post.author}</a>*/} {post.time}</span>
               </div>
-              {this.state.commentsToLoad === post.id &&
+              {commentsToLoad === post.id &&
               <div className="comment-section">
                 {this.props.auth ?
                   (
@@ -201,7 +222,7 @@ class AllPosts extends Component {
                 }
                 <Comments
                   postId={post.id}
-                  handleCommentCollapsFromChild={this.handleCommentCollapseFromChild}
+                  handleCommentCollapseFromChild={this.handleCommentCollapseFromChild}
                 />
               </div>
               }

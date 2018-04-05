@@ -76,7 +76,7 @@ class Comments extends Component {
           }
         })}
         {this.state.commentsToDisplay >= this.state.comments.length && !this.state.loading ? (
-          <p>You've reached the end :( <a onClick={this.props.handleCommentCollapsFromChild}>Close comments</a></p>
+          <p>You've reached the end :( <a onClick={this.props.handleCommentCollapseFromChild}>Close comments</a></p>
         ) : (
           <button type="button" className="button button-align-right"
                   onClick={this.handleCommentPaginationIncrease}>Show more commments
