@@ -1,21 +1,26 @@
 import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
+import PropTypes from "prop-types";
 
 const db = firebase.firestore();
 
 class UserProfile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: {
-        email: '',
-        password: '',
-        name: '',
-        blogName: ''
-      }
+  state = {
+    form: {
+      email: '',
+      password: '',
+      name: '',
+      blogName: ''
     }
-  }
+  };
+
+  static propTypes = {
+    auth: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.bool.isRequired
+    ])
+  };
 
   componentDidMount = async () => {
     const profileUid = this.props.match.params.uid;

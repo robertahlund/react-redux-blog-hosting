@@ -1,25 +1,30 @@
 import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
+import PropTypes from "prop-types";
 
 const db = firebase.firestore();
 
-class NewBlogPost extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: {
-        title: '',
-        tags: [],
-        content: [],
-        comments: [],
-        author: '',
-        authorUid: ''
-      },
+export default class NewBlogPost extends Component {
+  state = {
+    form: {
+      title: '',
+      tags: [],
+      content: [],
+      comments: [],
       author: '',
       authorUid: ''
-    }
-  }
+    },
+    author: '',
+    authorUid: ''
+  };
+
+  static propTypes = {
+    auth: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.bool.isRequired
+    ])
+  };
 
   componentDidMount = () => {
     const user = firebase.auth().currentUser;
@@ -33,7 +38,7 @@ class NewBlogPost extends Component {
     }
   };
 
-  handleFormChange = (event) => {
+  handleFormChange = event => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;
     formValues[target] = event.target.value;
@@ -102,5 +107,3 @@ class NewBlogPost extends Component {
     );
   }
 }
-
-export default NewBlogPost;

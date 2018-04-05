@@ -1,18 +1,25 @@
 import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
+import PropTypes from "prop-types";
 
 const db = firebase.firestore();
 
-class Comments extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      comments: [],
-      loading: true,
-      commentsToDisplay: 3
-    }
-  }
+export default class Comments extends Component {
+  state = {
+    comments: [],
+    loading: true,
+    commentsToDisplay: 3
+  };
+
+  static propTypes = {
+    auth: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.bool.isRequired
+    ]),
+    postId: PropTypes.string.isRequired,
+    handleCommentCollapseFromChild: PropTypes.func.isRequired
+  };
 
   componentDidMount = async () => {
     const {postId} = this.props;
@@ -86,5 +93,3 @@ class Comments extends Component {
     );
   }
 }
-
-export default Comments;

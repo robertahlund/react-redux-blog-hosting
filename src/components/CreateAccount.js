@@ -4,20 +4,17 @@ import 'firebase/firestore';
 
 const db = firebase.firestore();
 
-class CreateAccount extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: {
-        email: '',
-        password: '',
-        name: '',
-        blogName: ''
-      }
+export default class CreateAccount extends Component {
+  state = {
+    form: {
+      email: '',
+      password: '',
+      name: '',
+      blogName: ''
     }
-  }
+  };
 
-  handleFormChange = (event) => {
+  handleFormChange = event => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;
     formValues[target] = event.target.value;
@@ -31,12 +28,10 @@ class CreateAccount extends Component {
     const blogName = this.state.form.blogName.split(/\s/).join("-");
     try {
       await firebase.auth().createUserWithEmailAndPassword(email, password);
-      console.log("1")
       const user = firebase.auth().currentUser;
       await user.updateProfile({
         displayName: name
       });
-      console.log("2")
       const userInformation = {
         name: user.displayName,
         uid: user.uid,
@@ -74,12 +69,11 @@ class CreateAccount extends Component {
             <input id="password" type="password" data-change="password" value={this.state.form.password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
-            <button type="button" onClick={this.createAccount} className="button button-align-right">Create account</button>
+            <button type="button" onClick={this.createAccount} className="button button-align-right">Create account
+            </button>
           </form>
         </div>
       </section>
     );
   }
 }
-
-export default CreateAccount;

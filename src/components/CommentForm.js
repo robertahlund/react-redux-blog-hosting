@@ -1,20 +1,26 @@
 import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
+import PropTypes from "prop-types";
 
 const db = firebase.firestore();
 
-class CommentForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: {
-        title: '',
-        content: '',
-      },
-      postId: ''
-    }
-  }
+export default class CommentForm extends Component {
+  state = {
+    form: {
+      title: '',
+      content: '',
+    },
+    postId: ''
+  };
+
+  static propTypes = {
+    auth: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.bool.isRequired
+    ]),
+    postId: PropTypes.string.isRequired
+  };
 
   componentDidMount = () => {
     this.setState({
@@ -82,5 +88,3 @@ class CommentForm extends Component {
     );
   }
 }
-
-export default CommentForm;

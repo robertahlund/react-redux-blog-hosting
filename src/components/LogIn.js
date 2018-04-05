@@ -2,18 +2,15 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import firebase from '../firebaseConfig';
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: {
-        username: '',
-        password: ''
-      }
-    };
-  }
+export default class Login extends Component {
+  state = {
+    form: {
+      username: '',
+      password: ''
+    }
+  };
 
-  handleFormChange = (event) => {
+  handleFormChange = event => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;
     formValues[target] = event.target.value;
@@ -22,13 +19,15 @@ class Login extends Component {
     });
   };
 
-  handleLogin = () => {
+  handleLogin = async () => {
     const userName = this.state.form.username;
     const userPassword = this.state.form.password;
-    firebase.auth().signInWithEmailAndPassword(userName, userPassword)
-      .catch(error => {
-        console.log(error)
-      })
+    try {
+      await firebase.auth().signInWithEmailAndPassword(userName, userPassword)
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   render() {
@@ -57,5 +56,3 @@ class Login extends Component {
     );
   }
 }
-
-export default Login;

@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import firebase from '../firebaseConfig';
+import PropTypes from "prop-types";
 
-class Menu extends Component {
-  constructor(props) {
-    super(props);
-  }
+export default class Menu extends Component {
+  static propTypes = {
+    auth: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.bool.isRequired
+    ])
+  };
 
   handleLogout = async () => {
     try {
       await firebase.auth().signOut();
-      console.log('you are logged out.')
     }
     catch (error) {
       console.log(error)
@@ -19,6 +22,7 @@ class Menu extends Component {
 
   render() {
     const {uid, userData} = this.props.auth;
+    const {auth} = this.props;
     return (
       <nav className="menu">
         <div className="inner">
@@ -27,25 +31,25 @@ class Menu extends Component {
             <span><Link to="/">Placeholder</Link></span>
           </div>
           <ul>
-            {this.props.auth ? (
+            {auth ? (
               <li><Link to="/new-post">Create new
                 post</Link></li>
             ) : (
               null
             )}
-            {this.props.auth ? (
+            {auth ? (
               <li><Link to={`/blog/${uid}/${userData.blogName}`}>Show all
                 posts</Link></li>
             ) : (
               null
             )}
             <li>Browse users?</li>
-            {this.props.auth ? (
+            {auth ? (
               <li><Link to={`/user/${uid}`}>Profile</Link></li>
             ) : (
               null
             )}
-            {!this.props.auth ? (
+            {!auth ? (
               <li><Link to="/login">Log in</Link></li>
             ) : (
               <li onClick={this.handleLogout}><a>Log out</a></li>
@@ -56,5 +60,3 @@ class Menu extends Component {
     );
   }
 }
-
-export default Menu;

@@ -3,27 +3,33 @@ import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
+import PropTypes from 'prop-types';
 
 const db = firebase.firestore();
 
-class AllPosts extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      allPosts: [],
-      allPostsClone: [],
-      loading: true,
-      commentsToLoad: '',
-      searchOpen: false,
-      searchValue: '',
-      currentBlogData: {
-        blogName: '',
-        blogUid: ''
-      }
+export default class AllPosts extends Component {
+  state = {
+    allPosts: [],
+    allPostsClone: [],
+    loading: true,
+    commentsToLoad: '',
+    searchOpen: false,
+    searchValue: '',
+    currentBlogData: {
+      blogName: '',
+      blogUid: ''
     }
-  }
+  };
+
+  static propTypes = {
+    auth: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.bool.isRequired
+    ])
+  };
 
   componentDidMount = async () => {
+    console.log("kukenasdasd")
     this.setState({
       currentBlogData: {
         blogName: this.props.match.params.blogName.split(/[-]/).join(" "),
@@ -177,10 +183,10 @@ class AllPosts extends Component {
         {allPosts.length === 0 && !loading && searchResultLength !== 0 &&
         <p className="center">This user has not posted anything :(</p>}
         {searchResultLength === 0 &&
-          <div>
+        <div>
           <p className="center">Your search returned no matches.</p>
-            <a className="center" onClick={this.displayAllPosts}>View all posts</a>
-          </div>}
+          <a className="center" onClick={this.displayAllPosts}>View all posts</a>
+        </div>}
         }
         {allPosts.map((post, index) => {
           return (
@@ -233,5 +239,3 @@ class AllPosts extends Component {
     );
   }
 }
-
-export default AllPosts;
