@@ -30,8 +30,8 @@ export const SearchBox = (
 
 SearchBox.propTypes = {
   searchResultLength: PropTypes.oneOfType([
-    PropTypes.number.isRequired,
-    PropTypes.object.isRequired
+    PropTypes.number,
+    PropTypes.object
   ]),
   allPostsClone: PropTypes.array.isRequired,
   displayAllPosts: PropTypes.func.isRequired,

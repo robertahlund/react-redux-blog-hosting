@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
 export default class Menu extends Component {
   static propTypes = {
     auth: PropTypes.oneOfType([
-      PropTypes.object.isRequired,
-      PropTypes.bool.isRequired
-    ])
+      PropTypes.object,
+      PropTypes.bool
+    ]).isRequired
   };
 
   handleLogout = async () => {

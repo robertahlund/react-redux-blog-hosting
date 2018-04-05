@@ -38,6 +38,7 @@ export default class CommentForm extends Component {
   };
 
   submitPost = async () => {
+    const {getComments} = this.props;
     const postId = this.state.postId;
     const databaseRef = db.collection('posts').doc(postId);
     console.log(this.props.auth.userData, 'datatatata');
@@ -63,7 +64,8 @@ export default class CommentForm extends Component {
           title: '',
           content: '',
         }
-      })
+      });
+      await getComments();
     }
     catch (error) {
       console.log(error);
@@ -72,19 +74,22 @@ export default class CommentForm extends Component {
 
   render() {
     console.log(this.props.postId)
-    return (
-      <form>
-        <h3>Post a comment</h3>
-        <label htmlFor="title">Title</label>
-        <input id="title" type="text" data-change="title" placeholder="Title" value={this.state.form.title}
-               onChange={this.handleFormChange} className="new-post-input"/>
-        <label htmlFor="content">Comment</label>
-        <textarea name="content" data-change="content" id="content" rows="3"
-                  placeholder="This is content."
-                  value={this.state.form.content} onChange={this.handleFormChange}
-                  className="new-post-textarea"/>
-        <button type="button" onClick={this.submitPost} className="button new-post-button">Submit comment</button>
-      </form>
-    );
+    const {auth} = this.props;
+    if (auth) {
+      return (
+        <form>
+          <h3>Post a comment</h3>
+          <label htmlFor="title">Title</label>
+          <input id="title" type="text" data-change="title" placeholder="Title" value={this.state.form.title}
+                 onChange={this.handleFormChange} className="new-post-input"/>
+          <label htmlFor="content">Comment</label>
+          <textarea name="content" data-change="content" id="content" rows="3"
+                    placeholder="This is content."
+                    value={this.state.form.content} onChange={this.handleFormChange}
+                    className="new-post-textarea"/>
+          <button type="button" onClick={this.submitPost} className="button new-post-button">Submit comment</button>
+        </form>
+      );
+    } else return null;
   }
 }

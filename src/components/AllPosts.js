@@ -7,6 +7,9 @@ import PropTypes from 'prop-types';
 import {Header} from "./Header";
 import {Loading} from "./Loading";
 import {SearchBox} from "./SearchBox";
+import {NoPostsMessage} from "./NoPostsMessage";
+import {SearchResultMessage} from "./SearchResultMessage";
+import Post from "./Post";
 
 const db = firebase.firestore();
 
@@ -29,9 +32,9 @@ export default class AllPosts extends Component {
 
   static propTypes = {
     auth: PropTypes.oneOfType([
-      PropTypes.object.isRequired,
-      PropTypes.bool.isRequired
-    ])
+      PropTypes.object,
+      PropTypes.bool
+    ]).isRequired
   };
 
   componentDidMount = async () => {
@@ -62,7 +65,7 @@ export default class AllPosts extends Component {
       })
     }
     catch (error) {
-      console.log("Error getting documents: ", error);
+      console.log(error);
     }
   };
 
@@ -139,7 +142,6 @@ export default class AllPosts extends Component {
       allPosts: findPosts,
       searchResultLength: findPosts.length
     });
-    console.log(findPosts)
   };
 
   closeSearch = () => {
@@ -161,6 +163,7 @@ export default class AllPosts extends Component {
       searchResultLength, allPostsClone, searchValue,
       searchOpen, loading, allPosts, commentsToLoad
     } = this.state;
+    const auth = this.props.auth;
     return (
       <section className="all-posts">
         <Header iconName="jam jam-document" headerText={blogName}/>
@@ -177,17 +180,18 @@ export default class AllPosts extends Component {
           searchRef={this.searchInput}
         />
         <Loading display={loading}/>
-        {allPosts.length === 0 && !loading && searchResultLength !== 0 &&
-        <p className="center">This user has not posted anything :(</p>}
-        {searchResultLength === 0 &&
-        <div>
-          <p className="center">Your search returned no matches.</p>
-          <a className="center" onClick={this.displayAllPosts}>View all posts</a>
-        </div>}
-        }
+        <NoPostsMessage
+          allPostsClone={allPostsClone}
+          loading={loading}
+          searchResultLength={searchResultLength}
+        />
+        <SearchResultMessage
+          displayAllPosts={this.displayAllPosts}
+          searchResultLength={searchResultLength}
+        />
         {allPosts.map((post, index) => {
           return (
-            <div className="post" key={index} data-post-id={post.id}>
+            /*<div className="post" key={index} data-post-id={post.id}>
               <h3>{post.title}</h3>
               {post.content.map((paragraph, index) => {
                 return (
@@ -209,7 +213,7 @@ export default class AllPosts extends Component {
                   <span className={commentsToLoad === post.id ? 'jam jam-angle-top' : 'jam jam-angle-top' +
                     ' rotate'}></span>
                 </a>
-                <span className="time">{/*Posted by <a>{post.author}</a>*/} {post.time}</span>
+                <span className="time">Posted by <a>{post.author}</a> {post.time}</span>
               </div>
               {commentsToLoad === post.id &&
               <div className="comment-section">
@@ -229,7 +233,16 @@ export default class AllPosts extends Component {
                 />
               </div>
               }
-            </div>
+            </div>*/
+            <Post
+              auth={auth}
+              post={post}
+              handleSearchByTag={this.handleSearchByTag}
+              commentsToLoad={commentsToLoad}
+              handleComments={this.handleComments}
+              handleCommentCollapseFromChild={this.handleCommentCollapseFromChild}
+              key={index}
+            />
           );
         })}
       </section>

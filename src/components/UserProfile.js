@@ -18,9 +18,9 @@ class UserProfile extends Component {
 
   static propTypes = {
     auth: PropTypes.oneOfType([
-      PropTypes.object.isRequired,
-      PropTypes.bool.isRequired
-    ])
+      PropTypes.object,
+      PropTypes.bool
+    ]).isRequired
   };
 
   componentDidMount = async () => {
