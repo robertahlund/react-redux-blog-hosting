@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
+import {Header} from "./Header";
 
 const db = firebase.firestore();
 
@@ -50,10 +51,7 @@ export default class CreateAccount extends Component {
   render() {
     return (
       <section className="new-post">
-        <header className="header">
-          <span className="jam jam-user"></span>
-          <h1>Create an account</h1>
-        </header>
+        <Header iconName="jam jam-user" headerText="Create an account"/>
         <div className="new-post-form">
           <form>
             <label htmlFor="name">Full name</label>

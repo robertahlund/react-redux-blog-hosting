@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
+import {Header} from "./Header";
 
 export default class Home extends Component {
   render() {
     return (
-      <section className="home">
-        <header className="header">
-          <span className="jam jam-home"></span>
-          <h1>Home</h1>
-        </header>
-      </section>
+      <Header iconName="jam jam-home" headerText="Home"/>
     );
   }
 }

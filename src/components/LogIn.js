@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import firebase from '../firebaseConfig';
+import {Header} from "./Header";
 
 export default class Login extends Component {
   state = {
@@ -33,10 +34,7 @@ export default class Login extends Component {
   render() {
     return (
       <section className="new-post">
-        <header className="header">
-          <span className="jam jam-padlock"></span>
-          <h1>Log in</h1>
-        </header>
+        <Header iconName="jam jam-padlock" headerText="Log in"/>
         <div className="new-post-form">
           <form>
             <label htmlFor="username">Email</label>

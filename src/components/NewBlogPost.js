@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 import PropTypes from "prop-types";
+import {Header} from "./Header";
 
 const db = firebase.firestore();
 
@@ -81,10 +82,7 @@ export default class NewBlogPost extends Component {
   render() {
     return (
       <section className="new-post">
-        <header className="header">
-          <span className="jam jam-pencil"></span>
-          <h1>Create a new post</h1>
-        </header>
+        <Header iconName="jam jam-pencil" headerText="Create a new post"/>
         <div className="new-post-form">
           <form>
             <label htmlFor="title">Title</label>

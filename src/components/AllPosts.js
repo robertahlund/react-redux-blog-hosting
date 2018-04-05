@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 import PropTypes from 'prop-types';
+import {Header} from "./Header";
 
 const db = firebase.firestore();
 
@@ -158,10 +159,7 @@ export default class AllPosts extends Component {
     } = this.state;
     return (
       <section className="all-posts">
-        <header className="header">
-          <span className="jam jam-document"></span>
-          <h1>{blogName}</h1>
-        </header>
+        <Header iconName="jam jam-document" headerText={blogName}/>
         <div className="search-container">
           {searchResultLength > 0 && searchResultLength !== allPostsClone.length ?
             (

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 import PropTypes from "prop-types";
+import {Header} from "./Header";
 
 const db = firebase.firestore();
 
@@ -58,15 +59,18 @@ class UserProfile extends Component {
 
   };
 
+  userIsProfileOwner = () => {
+    if (this.props.auth && this.props.auth.userData.uid === this.props.match.params.uid) {
+      return "Edit your profile"
+    } else {
+      return this.state.form.name;
+    }
+  };
+
   render() {
     return (
       <section className="new-post">
-        <header className="header">
-          <span className="jam jam-user"></span>
-          {this.props.auth && this.props.auth.userData.uid === this.props.match.params.uid ?
-            (<h1>Edit your profile</h1>) :
-            (<h1>{this.state.form.name}</h1>)}
-        </header>
+        <Header iconName="jam jam-user" headerText={this.userIsProfileOwner()}/>
         <div className="new-post-form">
           <form autoComplete="off">
             <label htmlFor="name">Full name</label>
