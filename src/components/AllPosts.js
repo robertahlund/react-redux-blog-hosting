@@ -5,6 +5,8 @@ import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 import PropTypes from 'prop-types';
 import {Header} from "./Header";
+import {Loading} from "./Loading";
+import {SearchBox} from "./SearchBox";
 
 const db = firebase.firestore();
 
@@ -16,11 +18,14 @@ export default class AllPosts extends Component {
     commentsToLoad: '',
     searchOpen: false,
     searchValue: '',
+    searchResultLength: null,
     currentBlogData: {
       blogName: '',
       blogUid: ''
     }
   };
+
+  searchInput = React.createRef();
 
   static propTypes = {
     auth: PropTypes.oneOfType([
@@ -85,10 +90,10 @@ export default class AllPosts extends Component {
   };
 
   toggleSearch = () => {
-    this.setState({
-      searchOpen: !this.state.searchOpen
-    }, () => {
-      this.searchInput.focus();
+    this.setState(prevState => ({
+      searchOpen: !prevState.searchOpen
+    }), () => {
+      this.searchInput.current.focus();
     });
   };
 
@@ -159,24 +164,19 @@ export default class AllPosts extends Component {
     return (
       <section className="all-posts">
         <Header iconName="jam jam-document" headerText={blogName}/>
-        <div className="search-container">
-          {searchResultLength > 0 && searchResultLength !== allPostsClone.length ?
-            (
-              <div>
-                <p>{"Found " + searchResultLength + " results."}</p>
-                <a onClick={this.displayAllPosts}>View all posts</a>
-              </div>
-            )
-            :
-            (null)}
-          <input type="text" onChange={this.handleSearchInput} onKeyDown={this.handleSearch} onBlur={this.closeSearch}
-                 ref={input => this.searchInput = input}
-                 value={searchValue}
-                 className={searchOpen ? 'search-input' : 'hidden-input'}
-                 placeholder="Search for tags and titles."/>
-          <span className="jam jam-search" onClick={this.toggleSearch}></span>
-        </div>
-        {loading ? (<div className="loader"></div>) : null}
+        <SearchBox
+          searchResultLength={searchResultLength}
+          allPostsClone={allPostsClone}
+          displayAllPosts={this.displayAllPosts}
+          handleSearchInput={this.handleSearchInput}
+          handleSearch={this.handleSearch}
+          closeSearch={this.closeSearch}
+          searchValue={searchValue}
+          searchOpen={searchOpen}
+          toggleSearch={this.toggleSearch}
+          searchRef={this.searchInput}
+        />
+        <Loading display={loading}/>
         {allPosts.length === 0 && !loading && searchResultLength !== 0 &&
         <p className="center">This user has not posted anything :(</p>}
         {searchResultLength === 0 &&
