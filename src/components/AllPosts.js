@@ -30,7 +30,6 @@ export default class AllPosts extends Component {
   };
 
   componentDidMount = async () => {
-    console.log("kukenasdasd")
     this.setState({
       currentBlogData: {
         blogName: this.props.match.params.blogName.split(/[-]/).join(" "),
