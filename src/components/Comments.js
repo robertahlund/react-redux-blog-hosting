@@ -4,6 +4,8 @@ import 'firebase/firestore';
 import PropTypes from "prop-types";
 import {Loading} from "./Loading";
 import CommentForm from "./CommentForm";
+import {CommentDetail} from "./CommentDetail";
+import {CommentFooter} from "./CommentFooter";
 
 const db = firebase.firestore();
 
@@ -24,7 +26,6 @@ export default class Comments extends Component {
   };
 
   componentDidMount = async () => {
-    console.log("mount")
     await this.getComments()
   };
 
@@ -63,10 +64,10 @@ export default class Comments extends Component {
   };
 
   render() {
-    const {loading} = this.state;
-    const {auth, postId} = this.props;
+    const {loading, comments, commentsToDisplay} = this.state;
+    const {auth, postId, handleCommentCollapseFromChild} = this.props;
     return (
-      <React.Fragment>
+      <div className="comment-section">
         <CommentForm
           postId={postId}
           auth={auth}
@@ -74,33 +75,27 @@ export default class Comments extends Component {
         />
         <div className="comments">
           <Loading display={loading}/>
-          {this.state.comments.map((comment, index) => {
-            if (index > this.state.commentsToDisplay - 1) {
+          {comments.map((comment, index) => {
+            if (index > commentsToDisplay - 1) {
               return null;
             } else {
               return (
-                <div className="comment" key={index}>
-                  <h4 className="comment-title">{comment.title}</h4>
-                  {comment.content.map((commentContent, index) => {
-                    return (
-                      <span className="content" key={index}>{commentContent}</span>
-                    );
-                  })}
-                  <span className="time">Posted by <span
-                    className="author">{comment.author}</span> @ {comment.time}</span>
-                </div>
+                <CommentDetail
+                  comment={comment}
+                  key={index}
+                />
               );
             }
           })}
-          {this.state.commentsToDisplay >= this.state.comments.length && !this.state.loading ? (
-            <p>You've reached the end :( <a onClick={this.props.handleCommentCollapseFromChild}>Close comments</a></p>
-          ) : (
-            <button type="button" className="button button-align-right"
-                    onClick={this.handleCommentPaginationIncrease}>Show more commments
-            </button>
-          )}
+          <CommentFooter
+            commentsToDisplay={commentsToDisplay}
+            comments={comments}
+            loading={loading}
+            handleCommentCollapseFromChild={handleCommentCollapseFromChild}
+            handleCommentPaginationIncrease={this.handleCommentPaginationIncrease}
+            handleCommentPaginationDecrease={this.handleCommentPaginationDecrease}/>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
-import CommentForm from "./CommentForm";
-import Comments from "./Comments";
 import PropTypes from 'prop-types';
 import {Header} from "./Header";
 import {Loading} from "./Loading";
@@ -18,7 +16,6 @@ export default class AllPosts extends Component {
     allPosts: [],
     allPostsClone: [],
     loading: true,
-    commentsToLoad: '',
     searchOpen: false,
     searchValue: '',
     searchResultLength: null,
@@ -67,29 +64,6 @@ export default class AllPosts extends Component {
     catch (error) {
       console.log(error);
     }
-  };
-
-  handleComments = event => {
-    //TODO better solution maybe
-    const target = event.currentTarget;
-    const commentsCanBeCollapsed = target.firstElementChild.className === 'jam jam-angle-top';
-    if (commentsCanBeCollapsed) {
-      this.setState({
-        commentsToLoad: ''
-      })
-    } else {
-      const toggleCommentsWithThisId = target.getAttribute('data-post-id');
-      console.log(toggleCommentsWithThisId);
-      this.setState({
-        commentsToLoad: toggleCommentsWithThisId
-      })
-    }
-  };
-
-  handleCommentCollapseFromChild = () => {
-    this.setState({
-      commentsToLoad: ''
-    })
   };
 
   toggleSearch = () => {
@@ -161,7 +135,7 @@ export default class AllPosts extends Component {
     const {blogName} = this.state.currentBlogData;
     const {
       searchResultLength, allPostsClone, searchValue,
-      searchOpen, loading, allPosts, commentsToLoad
+      searchOpen, loading, allPosts
     } = this.state;
     const auth = this.props.auth;
     return (
@@ -189,62 +163,14 @@ export default class AllPosts extends Component {
           displayAllPosts={this.displayAllPosts}
           searchResultLength={searchResultLength}
         />
-        {allPosts.map((post, index) => {
-          return (
-            /*<div className="post" key={index} data-post-id={post.id}>
-              <h3>{post.title}</h3>
-              {post.content.map((paragraph, index) => {
-                return (
-                  <p key={index}>{paragraph}</p>
-                );
-              })}
-              {post.tags.length > 0 ? (
-                <span className="tags">Tags:
-                  {post.tags.map((tag, index) => {
-                    return (
-                      <a key={index} onClick={this.handleSearchByTag}>{' #' + tag}</a>
-                    );
-                  })}
-               </span>
-              ) : (null)}
-              <div className="post-footer">
-                <a data-post-id={post.id}
-                   onClick={this.handleComments}>{post.comments ? post.comments.length + ' comments' : '0 comments'}
-                  <span className={commentsToLoad === post.id ? 'jam jam-angle-top' : 'jam jam-angle-top' +
-                    ' rotate'}></span>
-                </a>
-                <span className="time">Posted by <a>{post.author}</a> {post.time}</span>
-              </div>
-              {commentsToLoad === post.id &&
-              <div className="comment-section">
-                {this.props.auth ?
-                  (
-                    <CommentForm
-                      postId={post.id}
-                      auth={this.props.auth}
-                    />
-                  )
-                  :
-                  (null)
-                }
-                <Comments
-                  postId={post.id}
-                  handleCommentCollapseFromChild={this.handleCommentCollapseFromChild}
-                />
-              </div>
-              }
-            </div>*/
+        {allPosts.map((post, index) =>
             <Post
               auth={auth}
               post={post}
               handleSearchByTag={this.handleSearchByTag}
-              commentsToLoad={commentsToLoad}
-              handleComments={this.handleComments}
-              handleCommentCollapseFromChild={this.handleCommentCollapseFromChild}
               key={index}
             />
-          );
-        })}
+         )}
       </section>
     );
   }
