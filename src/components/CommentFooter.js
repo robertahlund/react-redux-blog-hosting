@@ -7,25 +7,25 @@ export const CommentFooter = (
     handleCommentPaginationIncrease, handleCommentPaginationDecrease
   }) => {
   return (
-    <React.Fragment>
+    <div className="comment-footer">
       {commentsToDisplay >= comments.length && !loading ? (
         <p>You've reached the end :( <a onClick={handleCommentCollapseFromChild}>Close comments</a></p>
       ) : (
         <React.Fragment>
           {commentsToDisplay > 3 && !loading &&
-          <button type="button" className="button button-align-right"
+          <button type="button" className="button"
                   onClick={handleCommentPaginationDecrease}>Show fewer commments
           </button>
           }
           <React.Fragment>
             <a onClick={handleCommentCollapseFromChild}>Close comments</a>
-            <button type="button" className="button button-align-right"
+            <button type="button" className="button"
                     onClick={handleCommentPaginationIncrease}>Show more commments
             </button>
           </React.Fragment>
         </React.Fragment>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

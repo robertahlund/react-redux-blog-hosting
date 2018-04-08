@@ -311,6 +311,14 @@ form {
       display: block;
     }
   }
+  .comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    a {
+      margin-top: 12px;
+    }
+  }
 }
 
 .comment-section {
