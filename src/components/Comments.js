@@ -6,6 +6,7 @@ import {Loading} from "./Loading";
 import CommentForm from "./CommentForm";
 import {CommentDetail} from "./CommentDetail";
 import {CommentFooter} from "./CommentFooter";
+import {FeedbackMessage} from "./FeedbackMessage";
 
 const db = firebase.firestore();
 
@@ -18,7 +19,12 @@ export default class Comments extends Component {
       endIndex: 3,
       currentPage: 1,
       totalPages: 0
-    }
+    },
+    message: {
+      type: '',
+      text: ''
+    },
+    timeoutId: null
   };
 
   static propTypes = {
@@ -31,7 +37,6 @@ export default class Comments extends Component {
   };
 
   componentDidMount = async () => {
-    console.log("asd")
     await this.getComments()
   };
 
@@ -85,8 +90,28 @@ export default class Comments extends Component {
     }))
   };
 
+  handleFeedbackMessage = message => {
+    const {timeoutId} = this.state;
+    this.setState(message, () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+      const messageTimeout = setTimeout(() => {
+        this.setState({
+          message: {
+            type: '',
+            text: ''
+          }
+        });
+      }, 3000);
+      this.setState({
+        timeoutId: messageTimeout
+      });
+    });
+  };
+
   render() {
-    const {loading, comments, commentsToDisplay} = this.state;
+    const {loading, comments, commentsToDisplay, message} = this.state;
     const {auth, postId, handleCommentCollapseFromChild} = this.props;
     return (
       <div className="comment-section">
@@ -94,7 +119,9 @@ export default class Comments extends Component {
           postId={postId}
           auth={auth}
           getComments={this.getComments}
+          handleFeedbackMessage={this.handleFeedbackMessage}
         />
+        <FeedbackMessage message={message}/>
         <div className="comments">
           <Loading display={loading}/>
           {comments.map((comment, index) => {
@@ -115,7 +142,8 @@ export default class Comments extends Component {
             loading={loading}
             handleCommentCollapseFromChild={handleCommentCollapseFromChild}
             handleCommentPaginationIncrease={this.handleCommentPaginationIncrease}
-            handleCommentPaginationDecrease={this.handleCommentPaginationDecrease}/>
+            handleCommentPaginationDecrease={this.handleCommentPaginationDecrease}
+          />
         </div>
       </div>
     );

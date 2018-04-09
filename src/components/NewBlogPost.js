@@ -54,7 +54,29 @@ export default class NewBlogPost extends Component {
     });
   };
 
+  validateInputs = async () => {
+    const {title, tags, content} = this.state.form;
+    if (title.length === 0) {
+      throw new Error('Title cannot be empty.');
+    } else if (content.length === 0) {
+      throw new Error('Content cannot be empty.');
+    }
+  };
+
   submitPost = async () => {
+    try {
+      await this.validateInputs()
+    }
+    catch (error) {
+      this.setState({
+        message: {
+          type: 'error',
+          text: error.message
+        }
+      });
+      return;
+    }
+
     const formValues = this.state.form;
     formValues.tags = formValues.tags.split(/\s*#[#\s]*/).join('#').toLowerCase().split('#');
     formValues.tags.splice(0, 1);
@@ -122,8 +144,9 @@ export default class NewBlogPost extends Component {
                    className="new-post-input"/>
             <FeedbackMessage message={message}/>
             <button type="button" onClick={this.submitPost} className="button new-post-button">
-              {loading && <span className="loader"/>}
-              Post</button>
+              {loading && <span className="loader-button"/>}
+              Post
+            </button>
           </form>
         </div>
       </section>

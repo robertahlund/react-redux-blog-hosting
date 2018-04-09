@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 import PropTypes from "prop-types";
+import '../css/CommentForm.css';
 
 const db = firebase.firestore();
 
@@ -11,7 +12,8 @@ export default class CommentForm extends Component {
       title: '',
       content: '',
     },
-    postId: ''
+    postId: '',
+    loading: false
   };
 
   static propTypes = {
@@ -37,7 +39,35 @@ export default class CommentForm extends Component {
     });
   };
 
+  validateInputs = async () => {
+    const {title, content} = this.state.form;
+    if (title.length === 0) {
+      throw new Error('Title cannot be empty.');
+    } else if (content.length === 0) {
+      throw new Error('Comment cannot be empty.');
+    }
+  };
+
   submitPost = async () => {
+    this.setState({
+      loading: true
+    });
+    const {handleFeedbackMessage} = this.props;
+    try {
+      await this.validateInputs();
+    }
+    catch (error) {
+      handleFeedbackMessage({
+        message: {
+          type: 'error',
+          text: error.message
+        }
+      });
+      this.setState({
+        loading: false
+      });
+      return;
+    }
     const {getComments} = this.props;
     const postId = this.state.postId;
     const databaseRef = db.collection('posts').doc(postId);
@@ -63,9 +93,16 @@ export default class CommentForm extends Component {
         form: {
           title: '',
           content: '',
-        }
+        },
+        loading: false
       });
       await getComments();
+      handleFeedbackMessage({
+        message: {
+          type: 'success',
+          text: 'Thank you for your comment!'
+        }
+      });
     }
     catch (error) {
       console.log(error);
@@ -74,6 +111,7 @@ export default class CommentForm extends Component {
 
   render() {
     const {auth} = this.props;
+    const {loading} = this.state;
     if (auth) {
       return (
         <form>
@@ -86,7 +124,9 @@ export default class CommentForm extends Component {
                     placeholder="This is content."
                     value={this.state.form.content} onChange={this.handleFormChange}
                     className="new-post-textarea"/>
-          <button type="button" onClick={this.submitPost} className="button new-post-button">Submit comment</button>
+          <button type="button" onClick={this.submitPost} className="button new-post-button">
+            {loading && <span className="loader-button-comment"/>}
+            Submit comment</button>
         </form>
       );
     } else return null;

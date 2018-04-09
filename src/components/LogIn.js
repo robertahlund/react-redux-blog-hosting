@@ -81,7 +81,7 @@ export default class Login extends Component {
               <div className="log-in-action-container">
                 <Link to="/create-account">Create an account</Link>
                 <button type="button" onClick={this.handleLogin} className="button log-in-button">
-                  {loading && <span className="loader"/>}
+                  {loading && <span className="loader-button"/>}
                   Log in</button>
               </div>
             </div>

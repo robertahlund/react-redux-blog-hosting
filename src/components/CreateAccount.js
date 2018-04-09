@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 import {Header} from "./Header";
+import {FeedbackMessage} from "./FeedbackMessage";
 
 const db = firebase.firestore();
 
@@ -12,7 +13,12 @@ export default class CreateAccount extends Component {
       password: '',
       name: '',
       blogName: ''
-    }
+    },
+    message: {
+      type: '',
+      text: ''
+    },
+    loading: false
   };
 
   handleFormChange = event => {
@@ -24,7 +30,32 @@ export default class CreateAccount extends Component {
     });
   };
 
+  validateInputs = async () => {
+    const {name, blogName} = this.state.form;
+    if (name.length === 0) {
+      throw new Error('Name cannot be empty.');
+    } else if (blogName.length === 0) {
+      throw new Error('Your blog has to have a name.');
+    }
+  };
+
   createAccount = async () => {
+    this.setState({
+      loading: true
+    });
+    try {
+      await this.validateInputs();
+    }
+    catch (error) {
+      this.setState({
+        message: {
+          type: 'error',
+          text: error.message
+        },
+        loading: false
+      });
+      return;
+    }
     const {email, password, name} = this.state.form;
     const blogName = this.state.form.blogName.split(/\s/).join("-");
     try {
@@ -42,14 +73,28 @@ export default class CreateAccount extends Component {
       const databaseRef = db.collection('users').doc(user.uid);
       await databaseRef.set(userInformation);
       console.log('User successfully created.');
+      this.setState({
+        message: {
+          type: "success",
+          text: "Your account was successfully created."
+        },
+        loading: false
+      })
     }
     catch (error) {
-      console.log(error);
+      this.setState({
+        message: {
+          type: "error",
+          text: error.message
+        },
+        loading: false
+      })
     }
   };
 
   render() {
     const {name, blogName, email, password} = this.state.form;
+    const {message, loading} = this.state;
     return (
       <section className="new-post">
         <Header iconName="jam jam-user" headerText="Create an account"/>
@@ -68,7 +113,10 @@ export default class CreateAccount extends Component {
             <input id="password" type="password" data-change="password" value={password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
-            <button type="button" onClick={this.createAccount} className="button button-align-right">Create account
+            <FeedbackMessage message={message}/>
+            <button type="button" onClick={this.createAccount} className="button button-align-right">
+              {loading && <span className="loader-button-comment"/>}
+              Create account
             </button>
           </form>
         </div>

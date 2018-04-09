@@ -1,0 +1,6 @@
+@import "LogIn.scss";
+
+.loader-button-comment {
+  @extend .loader-button;
+  left: 25px;
+}

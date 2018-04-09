@@ -23,7 +23,7 @@ export const CommentFooter = (
             }
             <React.Fragment>
               <p>Currently showing page: {currentPage} of {totalPages}</p>
-              {endIndex <= comments.length &&
+              {endIndex < comments.length &&
               <button type="button" className="button"
                       onClick={handleCommentPaginationIncrease}>Show more commments
               </button>
