@@ -16,9 +16,9 @@ export default class CommentForm extends Component {
 
   static propTypes = {
     auth: PropTypes.oneOfType([
-      PropTypes.object.isRequired,
-      PropTypes.bool.isRequired
-    ]),
+      PropTypes.object,
+      PropTypes.bool
+    ]).isRequired,
     postId: PropTypes.string.isRequired
   };
 
@@ -73,7 +73,6 @@ export default class CommentForm extends Component {
   };
 
   render() {
-    console.log(this.props.postId)
     const {auth} = this.props;
     if (auth) {
       return (

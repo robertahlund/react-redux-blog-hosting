@@ -13,19 +13,25 @@ export default class Comments extends Component {
   state = {
     comments: [],
     loading: true,
-    commentsToDisplay: 3
+    commentsToDisplay: {
+      startIndex: 0,
+      endIndex: 3,
+      currentPage: 1,
+      totalPages: 0
+    }
   };
 
   static propTypes = {
     auth: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.bool
-    ]),
+    ]).isRequired,
     postId: PropTypes.string.isRequired,
     handleCommentCollapseFromChild: PropTypes.func.isRequired
   };
 
   componentDidMount = async () => {
+    console.log("asd")
     await this.getComments()
   };
 
@@ -47,20 +53,36 @@ export default class Comments extends Component {
     const sortByTime = allComments.sort((a, b) => new Date(b.time) - new Date(a.time));
     this.setState({
       comments: sortByTime,
-      loading: false
+      loading: false,
+      commentsToDisplay: {
+        startIndex: 0,
+        endIndex: 3,
+        currentPage: 1,
+        totalPages: Math.ceil(sortByTime.length / 3)
+      }
     })
   };
 
   handleCommentPaginationIncrease = () => {
-    this.setState({
-      commentsToDisplay: this.state.commentsToDisplay + 3
-    })
+    this.setState(prevState => ({
+      commentsToDisplay: {
+        startIndex: prevState.commentsToDisplay.startIndex + 3,
+        endIndex: prevState.commentsToDisplay.endIndex + 3,
+        currentPage: prevState.commentsToDisplay.currentPage + 1,
+        totalPages: prevState.commentsToDisplay.totalPages
+      }
+    }))
   };
 
   handleCommentPaginationDecrease = () => {
-    this.setState({
-      commentsToDisplay: this.state.commentsToDisplay - 3
-    })
+    this.setState(prevState => ({
+      commentsToDisplay: {
+        startIndex: prevState.commentsToDisplay.startIndex - 3,
+        endIndex: prevState.commentsToDisplay.endIndex - 3,
+        currentPage: prevState.commentsToDisplay.currentPage - 1,
+        totalPages: prevState.commentsToDisplay.totalPages
+      }
+    }))
   };
 
   render() {
@@ -76,15 +98,15 @@ export default class Comments extends Component {
         <div className="comments">
           <Loading display={loading}/>
           {comments.map((comment, index) => {
-            if (index > commentsToDisplay - 1) {
-              return null;
-            } else {
+            if (index >= commentsToDisplay.startIndex && index <= commentsToDisplay.endIndex - 1) {
               return (
                 <CommentDetail
                   comment={comment}
                   key={index}
                 />
               );
+            } else {
+              return null;
             }
           })}
           <CommentFooter
