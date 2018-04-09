@@ -1,0 +1,12 @@
+.loader {
+  border: 2px solid #F4F5F6;
+  border-top: 2px solid #9B4DCA;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
+  margin: 50px auto 0 auto;
+  position: absolute;
+  top: -37px;
+  left: 70px;
+}

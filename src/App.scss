@@ -130,6 +130,7 @@ a {
   border: 0;
   border-radius: $global-border-radius;
   outline: 0;
+  position: relative;
   &:hover {
     background: $button-hover-color;
   }
@@ -332,7 +333,7 @@ form {
   }
 }
 
-.log-in-form-bottom {
+.log-in-action-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

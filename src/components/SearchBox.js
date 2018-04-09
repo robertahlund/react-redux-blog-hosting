@@ -9,8 +9,7 @@ export const SearchBox = (
   }) => {
   return (
     <div className="search-container">
-      {
-        searchResultLength > 0 && searchResultLength !== allPostsClone.length &&
+      {searchResultLength > 0 && searchResultLength !== allPostsClone.length &&
         <div>
           <p>{"Found " + searchResultLength + " results."}</p>
           <a onClick={displayAllPosts}>View all posts</a>

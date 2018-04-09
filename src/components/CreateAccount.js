@@ -49,22 +49,23 @@ export default class CreateAccount extends Component {
   };
 
   render() {
+    const {name, blogName, email, password} = this.state.form;
     return (
       <section className="new-post">
         <Header iconName="jam jam-user" headerText="Create an account"/>
         <div className="new-post-form">
           <form>
             <label htmlFor="name">Full name</label>
-            <input id="name" type="text" data-change="name" value={this.state.form.name}
+            <input id="name" type="text" data-change="name" value={name}
                    onChange={this.handleFormChange} className="new-post-input" placeholder="Name Lastname"/>
             <label htmlFor="name">Name your blog</label>
-            <input id="blogname" type="text" data-change="blogName" value={this.state.form.blogName}
+            <input id="blogname" type="text" data-change="blogName" value={blogName}
                    onChange={this.handleFormChange} className="new-post-input" placeholder="En kass blogg"/>
             <label htmlFor="username">Email</label>
-            <input id="username" type="text" data-change="email" value={this.state.form.email}
+            <input id="username" type="text" data-change="email" value={email}
                    onChange={this.handleFormChange} className="new-post-input"/>
             <label htmlFor="password">Password</label>
-            <input id="password" type="password" data-change="password" value={this.state.form.password}
+            <input id="password" type="password" data-change="password" value={password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
             <button type="button" onClick={this.createAccount} className="button button-align-right">Create account

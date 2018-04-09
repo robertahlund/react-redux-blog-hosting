@@ -2,13 +2,20 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import firebase from '../firebaseConfig';
 import {Header} from "./Header";
+import {FeedbackMessage} from "./FeedbackMessage";
+import '../css/LogIn.css'
 
 export default class Login extends Component {
   state = {
     form: {
       username: '',
       password: ''
-    }
+    },
+    message: {
+      type: '',
+      text: ''
+    },
+    loading: false
   };
 
   handleFormChange = event => {
@@ -23,30 +30,60 @@ export default class Login extends Component {
   handleLogin = async () => {
     const userName = this.state.form.username;
     const userPassword = this.state.form.password;
+    this.setState({
+      message: {
+        type: '',
+        text: ''
+      },
+      loading: true
+    });
     try {
       await firebase.auth().signInWithEmailAndPassword(userName, userPassword)
     }
     catch (error) {
-      console.log(error);
+      this.setState({
+        message: {
+          type: "error",
+          text: error.message
+        },
+        loading: false
+      })
     }
   };
 
+  componentWillUnmount = () => {
+    this.setState({
+      message: {
+        type: '',
+        text: ''
+      }
+    })
+  };
+
   render() {
+    const {username, password} = this.state.form;
+    const {message} = this.state;
+    const {loading} = this.state;
     return (
       <section className="new-post">
         <Header iconName="jam jam-padlock" headerText="Log in"/>
         <div className="new-post-form">
           <form>
             <label htmlFor="username">Email</label>
-            <input id="username" type="text" data-change="username" value={this.state.form.username}
+            <input id="username" type="text" data-change="username" value={username}
                    onChange={this.handleFormChange} className="new-post-input"/>
             <label htmlFor="password">Password</label>
-            <input id="password" type="password" data-change="password" value={this.state.form.password}
+            <input id="password" type="password" data-change="password" value={password}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
             <div className="log-in-form-bottom">
-              <Link to="/create-account">Create an account</Link>
-              <button type="button" onClick={this.handleLogin} className="button log-in-button">Log in</button>
+              <FeedbackMessage message={message}/>
+              <div className="log-in-action-container">
+                <Link to="/create-account">Create an account</Link>
+                <button type="button" onClick={this.handleLogin} className="button log-in-button">
+                  {loading && <span className="loader"/>}
+                  Log in</button>
+              </div>
             </div>
           </form>
         </div>

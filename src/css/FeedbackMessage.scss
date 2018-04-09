@@ -1,0 +1,21 @@
+.message-container {
+  border: 1px solid transparent;
+}
+
+.feedback-success-message-container {
+  @extend .message-container;
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 15px 0 10px 0;
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.feedback-error-message-container {
+  @extend .feedback-success-message-container, .message-container;
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}

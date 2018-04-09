@@ -3,6 +3,7 @@ import firebase from '../firebaseConfig';
 import 'firebase/firestore';
 import PropTypes from "prop-types";
 import {Header} from "./Header";
+import {FeedbackMessage} from "./FeedbackMessage";
 
 const db = firebase.firestore();
 
@@ -10,14 +11,19 @@ export default class NewBlogPost extends Component {
   state = {
     form: {
       title: '',
-      tags: [],
+      tags: '',
       content: [],
       comments: [],
       author: '',
       authorUid: ''
     },
     author: '',
-    authorUid: ''
+    authorUid: '',
+    message: {
+      type: '',
+      text: ''
+    },
+    loading: false
   };
 
   static propTypes = {
@@ -61,44 +67,63 @@ export default class NewBlogPost extends Component {
       post: formValues,
       form: {
         title: '',
-        tags: [],
+        tags: '',
         content: [],
         comments: [],
         author: '',
         authorUid: ''
-      }
+      },
+      loading: true
     });
 
     const databaseRef = db.collection('posts');
     try {
       const result = await databaseRef.add(formValues);
       console.log("Document written with ID: ", result.id, result);
+      this.setState({
+        loading: false,
+        message: {
+          type: 'success',
+          text: 'Successfully created post!'
+        }
+      })
     }
     catch (error) {
-      console.log(error)
+      this.setState({
+        loading: false,
+        message: {
+          type: 'error',
+          text: error.message
+        }
+      })
     }
   };
 
   render() {
+    const {title, content, tags} = this.state.form;
+    const {message, loading} = this.state;
     return (
       <section className="new-post">
         <Header iconName="jam jam-pencil" headerText="Create a new post"/>
         <div className="new-post-form">
           <form>
             <label htmlFor="title">Title</label>
-            <input id="title" type="text" data-change="title" placeholder="Title" value={this.state.form.title}
+            <input id="title" type="text" data-change="title" placeholder="Title" value={title}
                    onChange={this.handleFormChange} className="new-post-input"/>
             <label htmlFor="content">Content</label>
             <textarea name="content" data-change="content" id="content" cols="30" rows="10"
                       placeholder="This is content."
-                      value={this.state.form.content} onChange={this.handleFormChange}
+                      value={content} onChange={this.handleFormChange}
                       className="new-post-textarea"/>
             <label htmlFor="tags">Tags</label>
             <input id="tags" type="text" data-change="tags" placeholder="#tags #go #like #this #or this"
-                   value={this.state.form.tags}
+                   value={tags}
                    onChange={this.handleFormChange}
                    className="new-post-input"/>
-            <button type="button" onClick={this.submitPost} className="button new-post-button">Post</button>
+            <FeedbackMessage message={message}/>
+            <button type="button" onClick={this.submitPost} className="button new-post-button">
+              {loading && <span className="loader"/>}
+              Post</button>
           </form>
         </div>
       </section>
