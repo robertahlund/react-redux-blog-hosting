@@ -97,7 +97,6 @@ export default class NewBlogPost extends Component {
       },
       loading: true
     });
-
     const databaseRef = db.collection('posts');
     try {
       const result = await databaseRef.add(formValues);
