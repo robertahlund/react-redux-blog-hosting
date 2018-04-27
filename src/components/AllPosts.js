@@ -40,6 +40,8 @@ export default class AllPosts extends Component {
         blogName: this.props.match.params.blogName.split(/[-]/).join(" "),
         blogUid: this.props.match.params.uid
       }
+    }, () => {
+      document.title = `${this.state.currentBlogData.blogName}`;
     });
     let allPosts = [];
     const authorToGetPostsFrom = this.props.match.params.uid;

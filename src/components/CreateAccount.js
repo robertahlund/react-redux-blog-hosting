@@ -21,6 +21,13 @@ export default class CreateAccount extends Component {
     loading: false
   };
 
+  componentDidMount = () => {
+    document.title = "Create an account"
+    //TODO implement
+    // const getUser = await db.collection('users').where('name', '==', 'asyncc mastery').get();
+    // console.log(getUser.empty)
+  };
+
   handleFormChange = event => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;

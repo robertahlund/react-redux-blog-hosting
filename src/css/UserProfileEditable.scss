@@ -1,0 +1,12 @@
+@import "CommentForm.scss";
+@import "App.scss";
+
+.loader-button-update {
+  @extend .loader-button;
+  left: 17px;
+}
+
+.update-profile {
+  @extend .button;
+  width: 340px;
+}

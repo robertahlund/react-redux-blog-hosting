@@ -1,3 +1,12 @@
+.log-in-action-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  a {
+    margin-top: 12px;
+  }
+}
+
 .loader-button {
   border: 2px solid #F4F5F6;
   border-top: 2px solid #9B4DCA;

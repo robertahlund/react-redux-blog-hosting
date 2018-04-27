@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
-import './App.css';
+import './css/App.css';
 import firebase from './firebaseConfig';
 import 'firebase/firestore';
 import Menu from "./components/Menu";

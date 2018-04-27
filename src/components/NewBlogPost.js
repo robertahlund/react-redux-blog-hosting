@@ -34,6 +34,7 @@ export default class NewBlogPost extends Component {
   };
 
   componentDidMount = () => {
+    document.title = "Create a new post";
     const user = firebase.auth().currentUser;
     if (user !== null) {
       const author = firebase.auth().currentUser.displayName;

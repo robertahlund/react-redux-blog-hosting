@@ -18,6 +18,10 @@ export default class Login extends Component {
     loading: false
   };
 
+  componentDidMount = () => {
+    document.title = "Log in"
+  };
+
   handleFormChange = event => {
     const target = event.target.getAttribute('data-change');
     const formValues = this.state.form;

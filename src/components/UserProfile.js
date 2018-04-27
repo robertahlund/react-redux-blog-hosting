@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import PropTypes from "prop-types";
 import {Header} from "./Header";
 import {UserProfileEditable} from "./UserProfileEditable";
+import {UserProfilePresentational} from "./UserProfilePresentational";
 
 const db = firebase.firestore();
 
@@ -14,7 +15,12 @@ class UserProfile extends Component {
       password: '',
       name: '',
       blogName: ''
-    }
+    },
+    message: {
+      type: '',
+      text: ''
+    },
+    loading: true
   };
 
   static propTypes = {
@@ -25,6 +31,7 @@ class UserProfile extends Component {
   };
 
   componentDidMount = async () => {
+    document.title = "Profile";
     const profileUid = this.props.match.params.uid;
     const databaseRef = db.collection('users').where('uid', '==', profileUid);
     try {
@@ -38,8 +45,11 @@ class UserProfile extends Component {
             blogName: blogName.split(/[-]/).join(" "),
             password: ''
           }
+        }, () => {
+          document.title = `Profile: ${name}`
         });
         console.log(user.id, " => ", user.data());
+        this.setState(prevState => ({loading: !prevState.loading}))
       });
     }
     catch (error) {
@@ -57,9 +67,13 @@ class UserProfile extends Component {
   };
 
   updateAccountInfo = async () => {
+    this.setState({
+      loading: true
+    });
     const blogName = this.state.form.blogName.split(/\s/).join("-");
-    const {email, name} = this.state.form;
+    const {email, name, password} = this.state.form;
     const profileUid = this.props.match.params.uid;
+    const user = firebase.auth().currentUser;
     const databaseRef = db.collection('users').doc(profileUid);
     try {
       await databaseRef.update({
@@ -68,10 +82,30 @@ class UserProfile extends Component {
         name: name,
         uid: profileUid
       });
-      console.log("updated")
+      await user.updateProfile({
+        displayName: name,
+        email: email
+      });
+      await user.updateEmail(email);
+      if (password.length > 0) {
+        await user.updatePassword(password);
+      }
+      this.setState({
+        message: {
+          type: 'success',
+          text: "Your information was successfully updated."
+        },
+        loading: false
+      });
     }
     catch (error) {
-      console.log(error)
+      this.setState({
+        message: {
+          type: 'error',
+          text: error.message
+        },
+        loading: false
+      });
     }
   };
 
@@ -84,7 +118,7 @@ class UserProfile extends Component {
   };
 
   render() {
-    const {form} = this.state;
+    const {message, loading, form} = this.state;
     return (
       <section className="new-post">
         <Header
@@ -97,10 +131,15 @@ class UserProfile extends Component {
               form={form}
               handleFormChange={this.handleFormChange}
               updateAccountInfo={this.updateAccountInfo}
+              message={message}
+              loading={loading}
             />
           ) :
           (
-            null
+            <UserProfilePresentational
+              form={form}
+              loading={loading}
+            />
           )
         }
 

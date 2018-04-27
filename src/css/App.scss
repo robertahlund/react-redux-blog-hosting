@@ -199,11 +199,6 @@ form {
   align-self: flex-end;
 }
 
-.update-profile {
-  @extend .button;
-  width: 280px;
-}
-
 .new-post-textarea {
   @extend .new-post-input;
 }
@@ -330,14 +325,5 @@ form {
     border-left: 2px solid $global-font-color;
     padding-left: 20px;
     margin-bottom: 20px;
-  }
-}
-
-.log-in-action-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  a {
-    margin-top: 12px;
   }
 }

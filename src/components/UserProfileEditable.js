@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import {FeedbackMessage} from "./FeedbackMessage";
+import '../css/UserProfileEditable.css';
 
-export const UserProfileEditable = ({form, handleFormChange, updateAccountInfo}) => {
+export const UserProfileEditable = ({form, handleFormChange, updateAccountInfo, message, loading}) => {
   const {name, blogName, email, password} = form;
+  if (!loading) {
     return (
       <div className="new-post-form">
         <form autoComplete="off">
@@ -19,16 +22,22 @@ export const UserProfileEditable = ({form, handleFormChange, updateAccountInfo})
           <input id="password" type="password" data-change="password" value={password}
                  onChange={handleFormChange}
                  className="new-post-input"/>
+          <FeedbackMessage message={message}/>
           <button type="button" onClick={updateAccountInfo}
-                  className="button button-align-right update-profile">Update account information
+                  className="button button-align-right update-profile">
+            {loading && <span className="loader-button-update"/>}
+            Update account information
           </button>
         </form>
       </div>
     );
+  } else return null;
 };
 
 UserProfileEditable.propTypes = {
   form: PropTypes.object.isRequired,
   handleFormChange: PropTypes.func.isRequired,
-  updateAccountInfo: PropTypes.func.isRequired
+  updateAccountInfo: PropTypes.func.isRequired,
+  message: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired
 };
