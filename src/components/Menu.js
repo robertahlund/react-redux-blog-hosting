@@ -21,7 +21,7 @@ export default class Menu extends Component {
   };
 
   render() {
-    const {uid, userData} = this.props.auth;
+    const {uid, info} = this.props.auth;
     const {auth} = this.props;
     return (
       <nav className="menu">
@@ -38,7 +38,7 @@ export default class Menu extends Component {
               null
             )}
             {auth ? (
-              <li><Link to={`/blog/${uid}/${userData.blogName}`}>Show all
+              <li><Link to={`/blog/${uid}/${info.blogName}`}>Show all
                 posts</Link></li>
             ) : (
               null

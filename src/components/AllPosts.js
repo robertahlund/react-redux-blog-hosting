@@ -1,148 +1,179 @@
-import React, {Component} from 'react';
-import firebase from '../firebaseConfig';
-import 'firebase/firestore';
-import PropTypes from 'prop-types';
-import {Header} from "./Header";
-import {Loading} from "./Loading";
-import {SearchBox} from "./SearchBox";
-import {NoPostsMessage} from "./NoPostsMessage";
-import {SearchResultMessage} from "./SearchResultMessage";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Header } from "./Header";
+import { Loading } from "./Loading";
+import { SearchBox } from "./SearchBox";
+import { NoPostsMessage } from "./NoPostsMessage";
+import { SearchResultMessage } from "./SearchResultMessage";
 import Post from "./Post";
+import { bindActionCreators } from "redux";
+import * as postActions from "../actions/postActions";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-const db = firebase.firestore();
-
-export default class AllPosts extends Component {
+class AllPosts extends Component {
   state = {
-    allPosts: [],
-    allPostsClone: [],
     loading: true,
     searchOpen: false,
-    searchValue: '',
+    searchString: "",
     searchResultLength: null,
     currentBlogData: {
-      blogName: '',
-      blogUid: ''
+      blogName: "",
+      blogUid: ""
     }
   };
 
   searchInput = React.createRef();
 
   static propTypes = {
-    auth: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]).isRequired
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired
   };
 
   componentDidMount = async () => {
+    const { blogName, uid, search, searchWord } = this.props.match.params;
+    document.title = `${blogName.split(/[-]/).join(" ")}`;
+    if (search && searchWord) {
+      this.setState({
+        searchString: searchWord
+      });
+      await this.getAndFilterAllPosts(searchWord);
+    }
     this.setState({
       currentBlogData: {
-        blogName: this.props.match.params.blogName.split(/[-]/).join(" "),
-        blogUid: this.props.match.params.uid
+        blogName: blogName.split(/[-]/).join(" "),
+        blogUid: uid
       }
-    }, () => {
-      document.title = `${this.state.currentBlogData.blogName}`;
     });
-    let allPosts = [];
-    const authorToGetPostsFrom = this.props.match.params.uid;
-    const databaseRef = db.collection('posts').where('authorUid', '==', authorToGetPostsFrom);
-    try {
-      const querySnapshot = await databaseRef.get();
-      allPosts = [];
-      querySnapshot.forEach(doc => {
-        const postData = doc.data();
-        postData.id = doc.id;
-        allPosts.push(postData);
-        console.log(doc.id, " => ", doc.data());
-      });
-      const sortByTime = allPosts.sort((a, b) => new Date(b.time) - new Date(a.time));
-      console.log(sortByTime);
-      this.setState({
-        allPosts: sortByTime,
-        loading: false,
-        allPostsClone: JSON.parse(JSON.stringify(sortByTime))
-      })
+    if (!search && !searchWord) {
+      const { fetchAllPosts } = this.props;
+      await fetchAllPosts(uid);
     }
-    catch (error) {
-      console.log(error);
+    this.setState({
+      loading: false
+    });
+  };
+
+  componentDidUpdate = async prevProps => {
+    //URL has changed
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      const { search, searchWord } = this.props.match.params;
+      if (!search && !searchWord) {
+        this.displayAllPosts();
+        this.setState({
+          searchResultLength: null
+        });
+      } else {
+        this.setState({
+          searchString: searchWord
+        });
+        await this.getAndFilterAllPosts(searchWord, false);
+      }
     }
+  };
+
+  getAndFilterAllPosts = async (searchWord, shouldUpdateUrl = true) => {
+    const { uid } = this.props.match.params;
+    const { fetchAllPosts, allPostsClone } = this.props;
+    if (allPostsClone.length === 0) {
+      await fetchAllPosts(uid);
+    }
+    this.handleSearch(null, searchWord, shouldUpdateUrl);
   };
 
   toggleSearch = () => {
-    this.setState(prevState => ({
-      searchOpen: !prevState.searchOpen
-    }), () => {
-      this.searchInput.current.focus();
-    });
+    this.setState(
+      prevState => ({
+        searchOpen: !prevState.searchOpen
+      }),
+      () => {
+        this.searchInput.current.focus();
+      }
+    );
   };
 
   handleSearchInput = event => {
-    const {value} = event.target;
+    const { value } = event.target;
     this.setState({
-      searchValue: value
+      searchString: value
     });
   };
 
-  handleSearch = event => {
-    if (event.key === 'Enter') {
-      const {searchValue} = this.state;
-      const searchValueLower = searchValue.toLowerCase();
-      const allPosts = this.state.allPostsClone;
-      const findPosts = allPosts.filter(post => {
-        const {title, tags} = post;
-        return (
-          title.toLowerCase().includes(searchValueLower) ||
-          tags.includes(searchValueLower)
-        )
-      });
-      this.setState({
-        allPosts: findPosts,
-        searchResultLength: findPosts.length
-      });
-      this.closeSearch();
+  replaceSearchTerm = (path, searchWord) => {
+    let newUrl = path.split("/");
+    newUrl.splice(newUrl.length - 1, 1, searchWord);
+    newUrl = newUrl.join("/");
+    return newUrl;
+  };
+
+  handleSearch = (event, searchValue, shouldUpdateUrl = true) => {
+    const { search, searchWord } = this.props.match.params;
+    const { history } = this.props;
+    if (!searchValue) {
+      searchValue = this.state.searchString;
+    }
+    if (event) {
       event.preventDefault();
     }
-  };
 
-  handleSearchByTag = event => {
-    const {target} = event;
-    const searchForThisTag = target.innerText.split('#')[1];
-    const allPosts = this.state.allPostsClone;
-    const findPosts = allPosts.filter(post => {
-      const {tags} = post;
+    if (shouldUpdateUrl) {
+      if (search && searchWord) {
+        history.push(
+          this.replaceSearchTerm(history.location.pathname, searchValue)
+        );
+      } else {
+        history.push(`${history.location.pathname}/search/${searchValue}`);
+      }
+    }
+
+    const { filterPosts } = this.props;
+    const { allPostsClone } = this.props;
+    const searchValueLower = searchValue.toLowerCase();
+    const findPosts = allPostsClone.filter(post => {
+      const { title, tags } = post;
       return (
-        tags.includes(searchForThisTag)
-      )
+        title.toLowerCase().includes(searchValueLower) ||
+        tags.includes(searchValueLower)
+      );
     });
+    filterPosts(findPosts, searchValue);
+    this.closeSearch();
     this.setState({
-      allPosts: findPosts,
       searchResultLength: findPosts.length
     });
+  };
+
+  handleSearchByTag = async event => {
+    const { target } = event;
+    const searchForThisTag = target.innerText.split("#")[1];
+    await this.getAndFilterAllPosts(searchForThisTag);
   };
 
   closeSearch = () => {
     this.setState({
       searchOpen: false
-    })
-  };
-
-  displayAllPosts = () => {
-    this.setState({
-      allPosts: this.state.allPostsClone,
-      searchResultLength: null
     });
   };
 
+  displayAllPosts = () => {
+    const { history, displayAllPosts } = this.props;
+    const {currentBlogData} = this.state;
+    const {blogName, blogUid} = currentBlogData;
+    displayAllPosts();
+    this.setState({
+      searchResultLength: null
+    });
+    history.push(`/blog/${blogUid}/${blogName.replace(' ', '-')}`);
+  };
+
   render() {
-    const {blogName} = this.state.currentBlogData;
-    const {
-      searchResultLength, allPostsClone, searchValue,
-      searchOpen, loading, allPosts
-    } = this.state;
+    //console.log(this.props, "PROPS ALLPOSTS");
+    const { blogName } = this.state.currentBlogData;
+    const { searchResultLength, searchOpen, loading, searchString } = this.state;
+    const { allPostsClone, allPosts, searchValue } = this.props;
     const auth = this.props.auth;
     return (
       <section className="all-posts">
-        <Header iconName="jam jam-document" headerText={blogName}/>
+        <Header iconName="jam jam-document" headerText={blogName} />
         <SearchBox
           searchResultLength={searchResultLength}
           allPostsClone={allPostsClone}
@@ -154,8 +185,9 @@ export default class AllPosts extends Component {
           searchOpen={searchOpen}
           toggleSearch={this.toggleSearch}
           searchRef={this.searchInput}
+          searchString={searchString}
         />
-        <Loading display={loading}/>
+        <Loading display={loading} />
         <NoPostsMessage
           allPostsClone={allPostsClone}
           loading={loading}
@@ -164,16 +196,34 @@ export default class AllPosts extends Component {
         <SearchResultMessage
           displayAllPosts={this.displayAllPosts}
           searchResultLength={searchResultLength}
+          searchValue={searchValue}
         />
-        {allPosts.map((post, index) =>
-            <Post
-              auth={auth}
-              post={post}
-              handleSearchByTag={this.handleSearchByTag}
-              key={index}
-            />
-         )}
+        {allPosts.map((post, index) => (
+          <Post
+            auth={auth}
+            post={post}
+            handleSearchByTag={this.handleSearchByTag}
+            key={index}
+          />
+        ))}
       </section>
     );
   }
 }
+
+function mapStateToProps(state) {
+  console.log(state, "STATE");
+  return {
+    allPosts: state.posts.allPosts,
+    allPostsClone: state.posts.allPostsClone,
+    searchValue: state.posts.searchValue
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(postActions, dispatch);
+}
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AllPosts)
+);

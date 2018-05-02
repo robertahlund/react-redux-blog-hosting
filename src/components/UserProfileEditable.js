@@ -5,7 +5,6 @@ import '../css/UserProfileEditable.css';
 
 export const UserProfileEditable = ({form, handleFormChange, updateAccountInfo, message, loading}) => {
   const {name, blogName, email, password} = form;
-  if (!loading) {
     return (
       <div className="new-post-form">
         <form autoComplete="off">
@@ -31,7 +30,6 @@ export const UserProfileEditable = ({form, handleFormChange, updateAccountInfo, 
         </form>
       </div>
     );
-  } else return null;
 };
 
 UserProfileEditable.propTypes = {

@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
-import './css/App.css';
-import firebase from './firebaseConfig';
-import 'firebase/firestore';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import "./css/App.css";
+import firebase from "./firebaseConfig";
+import "firebase/firestore";
 import Menu from "./components/Menu";
 import NewBlogPost from "./components/NewBlogPost";
 import AllPosts from "./components/AllPosts";
@@ -10,88 +11,99 @@ import Login from "./components/LogIn";
 import Home from "./components/Home";
 import CreateAccount from "./components/CreateAccount";
 import UserProfile from "./components/UserProfile";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as authActions from "./actions/authActions";
 
 const db = firebase.firestore();
 
-export default class App extends Component {
-  state = {
-    auth: false
+class App extends Component {
+  componentDidMount = async () => {
+    console.log(this.props, "props");
+    await this.setAuthObserver();
   };
 
-  componentDidMount = () => {
+  static propTypes = {
+    authentication: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.bool
+    ]).isRequired
+  };
+
+  setAuthObserver = async () => {
+    const { userLogin, userLogout } = this.props;
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         try {
-          const databaseRef = db.collection('users').doc(user.uid);
+          const databaseRef = db.collection("users").doc(user.uid);
           const userData = await databaseRef.get();
           if (userData.exists) {
-            console.log("Document data:", userData.data());
             const userInformation = user;
             userInformation.userData = userData.data();
-            this.setState({
-              auth: userInformation
-            })
+            const { uid, displayName, email } = userInformation;
+            const info = userInformation.userData;
+            userLogin({ uid, info, displayName, email });
           } else {
-            console.log("No such document!");
+            userLogout();
           }
+        } catch (error) {
+          userLogout();
         }
-        catch (error) {
-          console.log("Error getting document:", error);
-        }
-      }
-      else {
-        console.log('ingen inloggad');
-        this.setState({
-          auth: false
-        })
+      } else {
+        userLogout();
       }
     });
   };
 
   render() {
+    const { auth } = this.props.authentication;
     return (
       <div className="App">
-        <Menu
-          auth={this.state.auth}
-        />
+        <Menu auth={auth} />
         <Switch>
-          <Route exact path="/" component={Home}/>
-          <Route path="/login" render={props => (
-            !this.state.auth ? (
-              <Login/>
-            ) : (
-              <Redirect to="/"/>
-            )
-          )}/>
-          <Route path="/create-account" render={props => (
-            !this.state.auth ? (
-              <CreateAccount/>
-            ) : (
-              <Redirect to="/"/>
-            )
-          )}/>
-          <Route path="/new-post" render={props => (
-            this.state.auth ? (
-              <NewBlogPost
-                {...props}
-                auth={this.state.auth}
-              />
-            ) : (
-              <Redirect to="/"/>
-            )
-          )}/>
-          <Route exact path="/blog/:uid/:blogName" render={props => (
-            <AllPosts
-              {...props}
-              auth={this.state.auth}/>
-          )}/>
-          <Route exact path="/user/:uid" render={props => (
-            <UserProfile
-              {...props}
-              auth={this.state.auth}/>
-          )}/>
+          <Route exact path="/" component={Home} />
+          <Route
+            path="/login"
+            render={props => (!auth ? <Login /> : <Redirect to="/" />)}
+          />
+          <Route
+            path="/create-account"
+            render={props => (!auth ? <CreateAccount /> : <Redirect to="/" />)}
+          />
+          <Route
+            path="/new-post"
+            render={props =>
+              auth ? (
+                <NewBlogPost {...props} auth={auth} />
+              ) : (
+                <Redirect to="/" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/blog/:uid/:blogName/:search?/:searchWord?"
+            render={props => <AllPosts {...props} auth={auth} />}
+          />
+          <Route
+            exact
+            path="/user/:uid"
+            render={props => <UserProfile {...props} auth={auth} />}
+          />
         </Switch>
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    authentication: state.authentication
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(authActions, dispatch);
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

@@ -1,19 +1,16 @@
-import React, {Component} from 'react';
-import 'firebase/firestore';
+import React, { Component } from "react";
+import "firebase/firestore";
 import Comments from "./Comments";
 import PropTypes from "prop-types";
-import {PostDetail} from "./PostDetail";
+import { PostDetail } from "./PostDetail";
 
 export default class Post extends Component {
   state = {
-    commentsToLoad: ''
+    commentsToLoad: ""
   };
 
   static propTypes = {
-    auth: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]).isRequired,
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     post: PropTypes.object.isRequired,
     handleSearchByTag: PropTypes.func.isRequired
   };
@@ -21,30 +18,31 @@ export default class Post extends Component {
   handleComments = event => {
     //TODO better solution maybe
     const target = event.currentTarget;
-    const commentsCanBeCollapsed = target.firstElementChild.className === 'jam jam-angle-top';
+    const commentsCanBeCollapsed =
+      target.firstElementChild.className === "jam jam-angle-top";
     if (commentsCanBeCollapsed) {
       this.setState({
-        commentsToLoad: ''
-      })
+        commentsToLoad: ""
+      });
     } else {
-      const toggleCommentsWithThisId = target.getAttribute('data-post-id');
+      const toggleCommentsWithThisId = target.getAttribute("data-post-id");
       console.log(toggleCommentsWithThisId);
       this.setState({
         commentsToLoad: toggleCommentsWithThisId
-      })
+      });
     }
   };
 
   handleCommentCollapseFromChild = () => {
     this.setState({
-      commentsToLoad: ''
-    })
+      commentsToLoad: ""
+    });
   };
 
   render() {
-    const {post, auth, handleSearchByTag} = this.props;
-    const {id} = post;
-    const {commentsToLoad} = this.state;
+    const { post, auth, handleSearchByTag } = this.props;
+    const { id } = post;
+    const { commentsToLoad } = this.state;
     return (
       <div className="post" data-post-id={id}>
         <PostDetail
@@ -53,13 +51,13 @@ export default class Post extends Component {
           post={post}
           commentsToLoad={commentsToLoad}
         />
-        {commentsToLoad === id &&
+        {commentsToLoad === id && (
           <Comments
             postId={id}
             handleCommentCollapseFromChild={this.handleCommentCollapseFromChild}
             auth={auth}
           />
-        }
+        )}
       </div>
     );
   }

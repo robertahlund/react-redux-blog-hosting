@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-export const SearchResultMessage = ({displayAllPosts, searchResultLength}) => {
+export const SearchResultMessage = ({displayAllPosts, searchResultLength, searchValue}) => {
   if(searchResultLength === 0) {
     return (
       <React.Fragment>
-        <p className="center">Your search returned no matches.</p>
+        <p className="center">Your search for "{searchValue}" returned no matches.</p>
         <a className="center" onClick={displayAllPosts}>View all posts</a>
       </React.Fragment>
     );
