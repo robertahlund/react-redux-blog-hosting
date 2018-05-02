@@ -32,7 +32,7 @@ export default class Menu extends Component {
           </div>
           <ul>
             {auth ? (
-              <li><Link to="/new-post">Create new
+              <li><Link to="/new-post/">Create new
                 post</Link></li>
             ) : (
               null
@@ -50,7 +50,7 @@ export default class Menu extends Component {
               null
             )}
             {!auth ? (
-              <li><Link to="/login">Log in</Link></li>
+              <li><Link to="/login/">Log in</Link></li>
             ) : (
               <li onClick={this.handleLogout}><a>Log out</a></li>
             )}

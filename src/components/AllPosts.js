@@ -156,19 +156,24 @@ class AllPosts extends Component {
 
   displayAllPosts = () => {
     const { history, displayAllPosts } = this.props;
-    const {currentBlogData} = this.state;
-    const {blogName, blogUid} = currentBlogData;
+    const { currentBlogData } = this.state;
+    const { blogName, blogUid } = currentBlogData;
     displayAllPosts();
     this.setState({
       searchResultLength: null
     });
-    history.push(`/blog/${blogUid}/${blogName.replace(' ', '-')}`);
+    history.push(`/blog/${blogUid}/${blogName.replace(" ", "-")}`);
   };
 
   render() {
     //console.log(this.props, "PROPS ALLPOSTS");
     const { blogName } = this.state.currentBlogData;
-    const { searchResultLength, searchOpen, loading, searchString } = this.state;
+    const {
+      searchResultLength,
+      searchOpen,
+      loading,
+      searchString
+    } = this.state;
     const { allPostsClone, allPosts, searchValue } = this.props;
     const auth = this.props.auth;
     return (

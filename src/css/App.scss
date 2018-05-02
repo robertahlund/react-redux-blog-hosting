@@ -246,33 +246,6 @@ form {
   }
 }
 
-.search-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 30px 30px 0 20px;
-  height: 100px;
-  .search-input {
-    @extend .new-post-input;
-    width: 350px;
-    animation: input-field-grow .2s linear;
-  }
-  .jam-search {
-    color: $primary-color;
-    font-size: 1.2em;
-    padding-left: 20px;
-    cursor: pointer;
-    &:hover {
-      color: $global-font-color;
-    }
-  }
-  .hidden-input {
-    display: none;
-  }
-  p {
-    padding-right: 20px;
-  }
-}
 
 .comment {
   display: flex;

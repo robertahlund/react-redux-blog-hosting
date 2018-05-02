@@ -24,10 +24,8 @@ class App extends Component {
   };
 
   static propTypes = {
-    authentication: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]).isRequired
+    authentication: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+      .isRequired
   };
 
   setAuthObserver = async () => {
@@ -63,15 +61,15 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route
-            path="/login"
+            path="/login/"
             render={props => (!auth ? <Login /> : <Redirect to="/" />)}
           />
           <Route
-            path="/create-account"
+            path="/create-account/"
             render={props => (!auth ? <CreateAccount /> : <Redirect to="/" />)}
           />
           <Route
-            path="/new-post"
+            path="/new-post/"
             render={props =>
               auth ? (
                 <NewBlogPost {...props} auth={auth} />

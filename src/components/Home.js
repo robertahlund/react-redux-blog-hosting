@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
-import {Header} from "./Header";
+import React, { Component } from "react";
+import { Header } from "./Header";
 
 export default class Home extends Component {
   componentDidMount() {
-    document.title = "Home"
+    document.title = "Home";
   }
   render() {
-    return (
-      <Header iconName="jam jam-home" headerText="Home"/>
-    );
+    return <Header iconName="jam jam-home" headerText="Home" />;
   }
 }

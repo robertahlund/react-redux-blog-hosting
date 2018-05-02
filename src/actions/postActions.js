@@ -1,4 +1,4 @@
-import * as type from './actionTypes';
+import * as type from "./actionTypes";
 import firebase from "../firebaseConfig";
 import "firebase/firestore";
 const db = firebase.firestore();
@@ -6,16 +6,16 @@ const db = firebase.firestore();
 export function displayAllPosts() {
   return {
     type: type.DISPLAY_ALL_POSTS
-  }
+  };
 }
 
-export function allPostsRetrieved(allPosts, allPostsClone) {
-  console.log('ALL POSTS RETRIEVED');
+function allPostsRetrieved(allPosts, allPostsClone) {
+  console.log("ALL POSTS RETRIEVED");
   return {
     type: type.FETCH_ALL_POSTS,
     allPosts,
     allPostsClone
-  }
+  };
 }
 
 export function fetchAllPosts(uid) {
@@ -34,13 +34,13 @@ export function fetchAllPosts(uid) {
       const sortByTime = allPosts.sort(
         (a, b) => new Date(b.time) - new Date(a.time)
       );
-      console.log(sortByTime, 'FIREBASE I REDUCER');
+      console.log(sortByTime, "FIREBASE I REDUCER");
       const allPostsClone = JSON.parse(JSON.stringify(sortByTime));
-      dispatch(allPostsRetrieved(allPosts, allPostsClone))
+      dispatch(allPostsRetrieved(allPosts, allPostsClone));
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 }
 
 export function filterPosts(allPosts, searchValue) {
@@ -48,5 +48,52 @@ export function filterPosts(allPosts, searchValue) {
     type: type.FILTER_POSTS,
     allPosts,
     searchValue
-  }
+  };
+}
+
+export function createNewBlogPost(formValues) {
+  return async function(dispatch, getState) {
+    const databaseRef = db.collection("posts");
+    try {
+      const result = await databaseRef.add(formValues);
+      console.log("Document written with ID: ", result.id, result);
+      dispatch(newBlogPostCreated(formValues));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+function newBlogPostCreated(formValues) {
+  return {
+    type: type.CREATE_NEW_BLOG_POST,
+    formValues
+  };
+}
+
+export function createNewComment(postId, newComment) {
+  console.log(postId, newComment, "action");
+  return async function(dispatch, getState) {
+    console.log(postId, newComment, "action");
+    const databaseRef = db.collection("posts").doc(postId);
+    try {
+      const querySnapshot = await databaseRef.get();
+      const allComments = [...querySnapshot.data().comments, newComment];
+      console.log(allComments);
+      await databaseRef.update({
+        comments: allComments
+      });
+      dispatch(newCommentCreated(postId, allComments));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+function newCommentCreated(postId, allComments) {
+  return {
+    type: type.CREATE_NEW_COMMENT,
+    postId,
+    allComments
+  };
 }

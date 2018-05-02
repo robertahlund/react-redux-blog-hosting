@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import firebase from '../firebaseConfig';
-import 'firebase/firestore';
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {Loading} from "./Loading";
+import { Loading } from "./Loading";
 import CommentForm from "./CommentForm";
-import {CommentDetail} from "./CommentDetail";
-import {CommentFooter} from "./CommentFooter";
-import {FeedbackMessage} from "./FeedbackMessage";
+import { CommentDetail } from "./CommentDetail";
+import { CommentFooter } from "./CommentFooter";
+import { FeedbackMessage } from "./FeedbackMessage";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import * as postActions from "../actions/postActions";
+import { bindActionCreators } from "redux";
 
-const db = firebase.firestore();
-
-export default class Comments extends Component {
+class Comments extends Component {
   state = {
     comments: [],
     loading: true,
@@ -21,41 +21,48 @@ export default class Comments extends Component {
       totalPages: 0
     },
     message: {
-      type: '',
-      text: ''
+      type: "",
+      text: ""
     },
     timeoutId: null
   };
 
   static propTypes = {
-    auth: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]).isRequired,
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     postId: PropTypes.string.isRequired,
     handleCommentCollapseFromChild: PropTypes.func.isRequired
   };
 
-  componentDidMount = async () => {
-    await this.getComments()
+  componentDidMount = () => {
+    this.getComments();
   };
 
-  getComments = async () => {
-    const {postId} = this.props;
-    const databaseRef = db.collection('posts').doc(postId);
-    const querySnapshot = await databaseRef.get();
-    let allComments = [];
+  componentDidUpdate = prevProps => {
+    if (prevProps !== this.props) {
+      this.getComments();
+    }
+  };
+
+  getComments = () => {
+    console.log(this.props.allPosts, "allposts");
+    const allComments = [];
     this.setState({
       loading: true
     });
-    allComments = [];
-    const postComments = querySnapshot.data().comments;
-    postComments.forEach(comment => {
-      const comments = comment;
-      comments.content = comment.content.split('\n');
-      allComments.push(comments);
+    const { allPosts, postId } = this.props;
+    const { comments } = JSON.parse(
+      JSON.stringify(allPosts.filter(post => post.id === postId)[0])
+    );
+    comments.forEach(comment => {
+      if (typeof comment.content === "string") {
+        comment.content = comment.content.split("\n");
+        console.log(comment);
+      }
+      allComments.push(comment);
     });
-    const sortByTime = allComments.sort((a, b) => new Date(b.time) - new Date(a.time));
+    const sortByTime = allComments.sort(
+      (a, b) => new Date(b.time) - new Date(a.time)
+    );
     this.setState({
       comments: sortByTime,
       loading: false,
@@ -65,7 +72,7 @@ export default class Comments extends Component {
         currentPage: 1,
         totalPages: Math.ceil(sortByTime.length / 3)
       }
-    })
+    });
   };
 
   handleCommentPaginationIncrease = () => {
@@ -76,7 +83,7 @@ export default class Comments extends Component {
         currentPage: prevState.commentsToDisplay.currentPage + 1,
         totalPages: prevState.commentsToDisplay.totalPages
       }
-    }))
+    }));
   };
 
   handleCommentPaginationDecrease = () => {
@@ -87,20 +94,20 @@ export default class Comments extends Component {
         currentPage: prevState.commentsToDisplay.currentPage - 1,
         totalPages: prevState.commentsToDisplay.totalPages
       }
-    }))
+    }));
   };
 
   handleFeedbackMessage = message => {
-    const {timeoutId} = this.state;
+    const { timeoutId } = this.state;
     this.setState(message, () => {
       if (timeoutId) {
-        clearTimeout(timeoutId)
+        clearTimeout(timeoutId);
       }
       const messageTimeout = setTimeout(() => {
         this.setState({
           message: {
-            type: '',
-            text: ''
+            type: "",
+            text: ""
           }
         });
       }, 3000);
@@ -111,8 +118,8 @@ export default class Comments extends Component {
   };
 
   render() {
-    const {loading, comments, commentsToDisplay, message} = this.state;
-    const {auth, postId, handleCommentCollapseFromChild} = this.props;
+    const { loading, comments, commentsToDisplay, message } = this.state;
+    const { auth, postId, handleCommentCollapseFromChild } = this.props;
     return (
       <div className="comment-section">
         <CommentForm
@@ -121,17 +128,15 @@ export default class Comments extends Component {
           getComments={this.getComments}
           handleFeedbackMessage={this.handleFeedbackMessage}
         />
-        <FeedbackMessage message={message}/>
+        <FeedbackMessage message={message} />
         <div className="comments">
-          <Loading display={loading}/>
+          <Loading display={loading} />
           {comments.map((comment, index) => {
-            if (index >= commentsToDisplay.startIndex && index <= commentsToDisplay.endIndex - 1) {
-              return (
-                <CommentDetail
-                  comment={comment}
-                  key={index}
-                />
-              );
+            if (
+              index >= commentsToDisplay.startIndex &&
+              index <= commentsToDisplay.endIndex - 1
+            ) {
+              return <CommentDetail comment={comment} key={index} />;
             } else {
               return null;
             }
@@ -141,11 +146,31 @@ export default class Comments extends Component {
             comments={comments}
             loading={loading}
             handleCommentCollapseFromChild={handleCommentCollapseFromChild}
-            handleCommentPaginationIncrease={this.handleCommentPaginationIncrease}
-            handleCommentPaginationDecrease={this.handleCommentPaginationDecrease}
+            handleCommentPaginationIncrease={
+              this.handleCommentPaginationIncrease
+            }
+            handleCommentPaginationDecrease={
+              this.handleCommentPaginationDecrease
+            }
           />
         </div>
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  console.log(state, "COMMENTS.js");
+  return {
+    allPosts: state.posts.allPosts,
+    allPostsClone: state.posts.allPostsClone
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(postActions, dispatch);
+}
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Comments)
+);

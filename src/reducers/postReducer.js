@@ -3,7 +3,7 @@ import * as type from "../actions/actionTypes";
 const initialState = {
   allPosts: [],
   allPostsClone: [],
-  searchValue: ''
+  searchValue: ""
 };
 
 export default function postReducer(state = initialState, action) {
@@ -25,6 +25,30 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         allPosts: [...state.allPostsClone]
+      };
+    case type.CREATE_NEW_COMMENT:
+      // action.postId
+      // action.allComments
+      return {
+        ...state,
+        allPosts: state.allPosts.map(post => {
+          if (post.id !== action.postId) {
+            return post;
+          }
+          return {
+            ...post,
+            comments: [...action.allComments]
+          };
+        }),
+        allPostsClone: state.allPostsClone.map(post => {
+          if (post.id !== action.postId) {
+            return post;
+          }
+          return {
+            ...post,
+            comments: [...action.allComments]
+          };
+        })
       };
     default:
       return state;

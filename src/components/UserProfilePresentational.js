@@ -16,5 +16,6 @@ export const UserProfilePresentational = ({form, loading}) => {
 };
 
 UserProfilePresentational.propTypes = {
-
+  form: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired
 };
