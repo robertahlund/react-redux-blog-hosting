@@ -1,19 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FeedbackMessage } from "./FeedbackMessage";
-import "../css/UserProfileEditable.css";
 
-export const UserProfileEditable = ({
-  form,
+export const CreateAccountForm = ({
+  name,
   handleFormChange,
-  updateAccountInfo,
+  blogName,
+  email,
+  password,
   message,
+  createAccount,
   loading
 }) => {
-  const { name, blogName, email, password } = form;
   return (
     <div className="new-post-form">
-      <form autoComplete="off">
+      <form>
         <label htmlFor="name">Full name</label>
         <input
           id="name"
@@ -22,8 +23,9 @@ export const UserProfileEditable = ({
           value={name}
           onChange={handleFormChange}
           className="new-post-input"
+          placeholder="Name Lastname"
         />
-        <label htmlFor="name">Blog name</label>
+        <label htmlFor="name">Name your blog</label>
         <input
           id="blogname"
           type="text"
@@ -31,6 +33,7 @@ export const UserProfileEditable = ({
           value={blogName}
           onChange={handleFormChange}
           className="new-post-input"
+          placeholder="En kass blogg"
         />
         <label htmlFor="username">Email</label>
         <input
@@ -53,21 +56,25 @@ export const UserProfileEditable = ({
         <FeedbackMessage message={message} />
         <button
           type="button"
-          onClick={updateAccountInfo}
-          className="button button-align-right update-profile"
+          onClick={createAccount}
+          className="button button-align-right"
+          disabled={loading}
         >
-          {loading && <span className="loader-button-update" />}
-          Update account information
+          {loading && <span className="loader-button-comment" />}
+          Create account
         </button>
       </form>
     </div>
   );
 };
 
-UserProfileEditable.propTypes = {
-  form: PropTypes.object.isRequired,
+CreateAccountForm.propTypes = {
+  name: PropTypes.string.isRequired,
   handleFormChange: PropTypes.func.isRequired,
-  updateAccountInfo: PropTypes.func.isRequired,
+  blogName: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
   message: PropTypes.object.isRequired,
+  createAccount: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired
 };

@@ -10,7 +10,7 @@ export default function authReducer(state = initialState, action) {
     case type.USER_LOG_IN:
       return {
         ...state,
-        auth: {...state.auth, ...action.user}
+        auth: { ...state.auth, ...action.user }
       };
     case type.USER_LOG_OUT:
       return {

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Header } from "./Header";
 import { UserProfileEditable } from "./UserProfileEditable";
 import { UserProfilePresentational } from "./UserProfilePresentational";
-import {Loading} from "./Loading";
+import { Loading } from "./Loading";
 
 const db = firebase.firestore();
 
@@ -119,7 +119,7 @@ class UserProfile extends Component {
   };
 
   render() {
-    console.log(this.props, 'PROPS USERPROFILE')
+    console.log(this.props, "PROPS USERPROFILE");
     const { message, loading, form } = this.state;
     const { auth } = this.props;
     const { uid } = this.props.match.params;
@@ -130,7 +130,7 @@ class UserProfile extends Component {
           iconName="jam jam-user"
           headerText={this.userIsProfileOwner()}
         />
-        <Loading display={loading}/>
+        <Loading display={loading} />
         {auth && auth.info.uid === uid ? (
           <UserProfileEditable
             form={form}
@@ -140,7 +140,7 @@ class UserProfile extends Component {
             loading={loading}
           />
         ) : (
-          <UserProfilePresentational form={form} loading={loading}/>
+          <UserProfilePresentational form={form} loading={loading} />
         )}
       </section>
     );

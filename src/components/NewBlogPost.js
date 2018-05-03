@@ -85,19 +85,10 @@ class NewBlogPost extends Component {
       });
       return;
     }
-    const formValues = this.formatFormValues();
     this.setState({
-      post: formValues,
-      form: {
-        title: "",
-        tags: "",
-        content: [],
-        comments: [],
-        author: "",
-        authorUid: ""
-      },
       loading: true
     });
+    const formValues = this.formatFormValues();
     const { createNewBlogPost } = this.props;
     try {
       await createNewBlogPost(formValues);
@@ -106,6 +97,14 @@ class NewBlogPost extends Component {
         message: {
           type: "success",
           text: "Successfully created post!"
+        },
+        form: {
+          title: "",
+          tags: "",
+          content: [],
+          comments: [],
+          author: "",
+          authorUid: ""
         }
       });
     } catch (error) {

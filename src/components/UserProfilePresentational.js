@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
-export const UserProfilePresentational = ({form, loading}) => {
-  const {blogName, email, name} = form;
-  console.log(loading)
+export const UserProfilePresentational = ({ form, loading }) => {
+  const { blogName, email, name } = form;
+  console.log(loading);
   if (!loading) {
     return (
       <ul>

@@ -44,7 +44,6 @@ class Comments extends Component {
   };
 
   getComments = () => {
-    console.log(this.props.allPosts, "allposts");
     const allComments = [];
     this.setState({
       loading: true
@@ -56,7 +55,6 @@ class Comments extends Component {
     comments.forEach(comment => {
       if (typeof comment.content === "string") {
         comment.content = comment.content.split("\n");
-        console.log(comment);
       }
       allComments.push(comment);
     });

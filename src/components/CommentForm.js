@@ -78,7 +78,11 @@ class CommentForm extends Component {
     const { createNewComment } = this.props;
     await createNewComment(postId, newComment);
     this.setState({
-      loading: false
+      loading: false,
+      form: {
+        title: "",
+        content: ""
+      }
     });
   };
 
