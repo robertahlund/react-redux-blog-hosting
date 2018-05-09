@@ -152,7 +152,7 @@ a {
     color: $primary-color;
     font-size: 4em;
   }
-  .jam-document {
+  .jam-document, .jam-shield-error {
     @extend .jam-pencil;
     padding-left: 5px;
   }

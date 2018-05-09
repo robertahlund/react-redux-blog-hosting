@@ -15,6 +15,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as authActions from "./actions/authActions";
 import BrowseBlogs from "./components/BrowseBlogs";
+import { Header } from "./components/Header";
 
 const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
@@ -64,14 +65,17 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route
+            exact
             path="/login/"
             render={props => (!auth ? <Login /> : <Redirect to="/" />)}
           />
           <Route
+            exact
             path="/create-account/"
             render={props => (!auth ? <CreateAccount /> : <Redirect to="/" />)}
           />
           <Route
+            exact
             path="/new-post/"
             render={props =>
               auth ? (
@@ -95,6 +99,11 @@ class App extends Component {
             exact
             path="/browse/"
             render={props => <BrowseBlogs {...props} auth={auth} />}
+          />
+          <Route
+            render={props => (
+              <Header headerText={"404 - Not found"} iconName="jam jam-shield-error" />
+            )}
           />
         </Switch>
       </div>

@@ -9,23 +9,61 @@ import { withRouter } from "react-router-dom";
 import "../css/BrowseBlogs.css";
 import { BrowseBlogsInfoRow } from "./BrowseBlogsInfoRow";
 import { BrowseBlogsInfoHeader } from "./BrowseBlogsInfoHeader";
+import { BrowseBlogsPagination } from "./BrowseBlogsPagination";
 
 class BrowseBlogs extends Component {
   state = {
-    loading: true
+    loading: true,
+    blogsToDisplay: {
+      startIndex: 0,
+      endIndex: 20,
+      currentPage: 1,
+      totalPages: 0
+    }
   };
 
   componentDidMount = async () => {
+    document.title = "Browse blogs";
     const { fetchAllBlogs } = this.props;
     await fetchAllBlogs();
+    const { blogs } = this.props;
     this.setState({
-      loading: false
+      loading: false,
+      blogsToDisplay: {
+        startIndex: 0,
+        endIndex: 20,
+        currentPage: 1,
+        totalPages: Math.ceil(blogs.length / 20)
+      }
     });
+  };
+
+  handleBlogPaginationIncrease = () => {
+    this.setState(prevState => ({
+      blogsToDisplay: {
+        startIndex: prevState.blogsToDisplay.startIndex + 20,
+        endIndex: prevState.blogsToDisplay.endIndex + 20,
+        currentPage: prevState.blogsToDisplay.currentPage + 1,
+        totalPages: prevState.blogsToDisplay.totalPages
+      }
+    }));
+  };
+
+  handleBlogPaginationDecrease = () => {
+    this.setState(prevState => ({
+      blogsToDisplay: {
+        startIndex: prevState.blogsToDisplay.startIndex - 20,
+        endIndex: prevState.blogsToDisplay.endIndex - 20,
+        currentPage: prevState.blogsToDisplay.currentPage - 1,
+        totalPages: prevState.blogsToDisplay.totalPages
+      }
+    }));
   };
 
   render() {
     const { blogs } = this.props;
-    const { loading } = this.state;
+    const { loading, blogsToDisplay } = this.state;
+    const { startIndex, endIndex, currentPage, totalPages } = blogsToDisplay;
     console.log(blogs);
     return (
       <section className="all-blogs">
@@ -36,8 +74,24 @@ class BrowseBlogs extends Component {
           <div className="blog-info-row-wrapper">
             <BrowseBlogsInfoHeader />
             {blogs.map((blog, index) => {
-              return <BrowseBlogsInfoRow blog={blog} key={index} />;
+              if (
+                index >= blogsToDisplay.startIndex &&
+                index <= blogsToDisplay.endIndex - 1
+              ) {
+                return <BrowseBlogsInfoRow blog={blog} key={index} />;
+              } else {
+                return null;
+              }
             })}
+            <BrowseBlogsPagination
+              startIndex={startIndex}
+              endIndex={endIndex}
+              blogs={blogs}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handleBlogPaginationDecrease={this.handleBlogPaginationDecrease}
+              handleBlogPaginationIncrease={this.handleBlogPaginationIncrease}
+            />
           </div>
         )}
       </section>
