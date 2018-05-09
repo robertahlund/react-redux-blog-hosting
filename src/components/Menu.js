@@ -39,7 +39,9 @@ export default class Menu extends Component {
                 <Link to={`/blog/${uid}/${info.blogName}`}>Show all posts</Link>
               </li>
             ) : null}
-            <li>Browse users?</li>
+            <li>
+              <Link to={"/browse/"}>Browse blogs</Link>
+            </li>
             {auth ? (
               <li>
                 <Link to={`/user/${uid}`}>Profile</Link>

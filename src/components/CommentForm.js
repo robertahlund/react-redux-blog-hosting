@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import firebase from "../firebaseConfig";
-import "firebase/firestore";
 import PropTypes from "prop-types";
 import "../css/CommentForm.css";
 import { bindActionCreators } from "redux";

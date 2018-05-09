@@ -6,7 +6,12 @@
   left: 17px;
 }
 
-.update-profile {
-  @extend .button;
-  width: 340px;
+.edit-profile-form {
+  @extend .new-post-form;
+  form {
+    .update-profile {
+      @extend .button;
+      width: 340px;
+    }
+  }
 }

@@ -162,7 +162,7 @@ class AllPosts extends Component {
     this.setState({
       searchResultLength: null
     });
-    history.push(`/blog/${blogUid}/${blogName.replace(" ", "-")}`);
+    history.push(`/blog/${blogUid}/${blogName.replace(/ /g, "-")}`);
   };
 
   render() {

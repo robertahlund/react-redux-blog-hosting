@@ -40,3 +40,41 @@ function accountCreated() {
     type: type.CREATE_NEW_ACCOUNT
   };
 }
+
+export function updateAccountInformation(form, profileUid) {
+  return async function(dispatch, getState) {
+    const blogName = form.blogName.split(/\s/).join("-");
+    const { email, name, password } = form;
+    const user = firebase.auth().currentUser;
+    const databaseRef = db.collection("users").doc(profileUid);
+    try {
+      if (password.length > 0) {
+        await user.updatePassword(password);
+      }
+      await user.updateProfile({
+        displayName: name,
+        email: email
+      });
+      await user.updateEmail(email);
+      await databaseRef.update({
+        blogName: blogName,
+        email: email,
+        name: name,
+        uid: profileUid
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+    dispatch(accountInformationUpdated(blogName, email, name));
+  };
+}
+
+function accountInformationUpdated(blogName, email, name) {
+  return {
+    type: type.UPDATE_ACCOUNT_INFORMATION,
+    blogName,
+    email,
+    name
+  };
+}

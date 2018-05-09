@@ -12,7 +12,7 @@ export const UserProfileEditable = ({
 }) => {
   const { name, blogName, email, password } = form;
   return (
-    <div className="new-post-form">
+    <div className="edit-profile-form">
       <form autoComplete="off">
         <label htmlFor="name">Full name</label>
         <input
@@ -41,7 +41,7 @@ export const UserProfileEditable = ({
           onChange={handleFormChange}
           className="new-post-input"
         />
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">New password</label>
         <input
           id="password"
           type="password"
@@ -49,6 +49,7 @@ export const UserProfileEditable = ({
           value={password}
           onChange={handleFormChange}
           className="new-post-input"
+          autoComplete="new-password"
         />
         <FeedbackMessage message={message} />
         <button

@@ -1,16 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
+import "../css/UserProfilePresentational.css";
+import { Link } from "react-router-dom";
 
 export const UserProfilePresentational = ({ form, loading }) => {
-  const { blogName, email, name } = form;
-  console.log(loading);
+  const { blogName, email, name, uid } = form;
   if (!loading) {
     return (
-      <ul>
-        <li>Name: {name}</li>
-        <li>Email: {email}</li>
-        <li>Blog name: {blogName}</li>
-      </ul>
+      <section className="profile-container">
+        <ul>
+          <li>
+            <span className="label">Name:</span> {name}
+          </li>
+          <li>
+            <span className="label">Email:</span> {email}
+          </li>
+          <li>
+            <span className="label">Blog name:</span>
+            <Link to={`/blog/${uid}/${blogName.replace(/ /g, "-")}`}>
+              {blogName}
+            </Link>
+          </li>
+        </ul>
+      </section>
     );
   } else return null;
 };

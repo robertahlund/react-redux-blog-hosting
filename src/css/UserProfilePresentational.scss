@@ -1,2 +1,22 @@
-@import "App.scss";
+@import 'App.scss';
 
+.label {
+  font-weight: 400;
+  display: block;
+  padding: 3px 0 3px 0;
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 120px;
+  ul {
+    @extend .post;
+    list-style: none;
+    width: auto;
+    margin: 0;
+    li {
+      padding: 10px 0 10px 0;
+    }
+  }
+}

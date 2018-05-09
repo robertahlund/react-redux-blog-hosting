@@ -29,7 +29,7 @@ export const PostDetail = ({
             className={
               commentsToLoad === id
                 ? "jam jam-angle-top"
-                : "jam jam-angle-top" + " rotate"
+                : "jam jam-angle-top rotate"
             }
           />
         </a>

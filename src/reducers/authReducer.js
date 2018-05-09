@@ -17,6 +17,21 @@ export default function authReducer(state = initialState, action) {
         ...state,
         auth: false
       };
+    case type.UPDATE_ACCOUNT_INFORMATION:
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          displayName: action.name,
+          email: action.email,
+          info: {
+            ...state.auth.info,
+            blogName: action.blogName,
+            email: action.email,
+            name: action.name
+          }
+        }
+      };
     default:
       return state;
   }

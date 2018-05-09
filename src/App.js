@@ -14,8 +14,11 @@ import UserProfile from "./components/UserProfile";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as authActions from "./actions/authActions";
+import BrowseBlogs from "./components/BrowseBlogs";
 
 const db = firebase.firestore();
+const settings = { timestampsInSnapshots: true };
+db.settings(settings);
 
 class App extends Component {
   componentDidMount = async () => {
@@ -87,6 +90,11 @@ class App extends Component {
             exact
             path="/user/:uid"
             render={props => <UserProfile {...props} auth={auth} />}
+          />
+          <Route
+            exact
+            path="/browse/"
+            render={props => <BrowseBlogs {...props} auth={auth} />}
           />
         </Switch>
       </div>

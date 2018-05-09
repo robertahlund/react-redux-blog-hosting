@@ -27,7 +27,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "http://robertahlund.github.io/simple-blog-page",
+  "homepage": "http://robertahlund.github.io/simple-blog-page/",
   "devDependencies": {
     "gh-pages": "^1.1.0",
     "query-string": "^5.0.1",

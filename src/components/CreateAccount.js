@@ -25,7 +25,7 @@ class CreateAccount extends Component {
     console.log(this.props);
     document.title = "Create an account";
     //TODO implement
-    // const getUser = await db.collection('users').where('name', '==', 'asyncc mastery').get();
+    // const getUser = await db.collection('users').where('blogName', '==', 'asyncc mastery').get();
     // console.log(getUser.empty)
   };
 
