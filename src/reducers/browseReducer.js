@@ -11,6 +11,21 @@ export default function browseReducer(state = initialState, action) {
         ...state,
         blogs: [...action.blogs]
       };
+    case type.SORT_BLOGS_BY_NAME:
+      return {
+        ...state,
+        blogs: [...action.blogs]
+      };
+    case type.SORT_BLOGS_BY_AUTHOR:
+      return {
+        ...state,
+        blogs: [...action.blogs]
+      };
+    case type.SORT_BLOGS_BY_CREATION_DATE:
+      return {
+        ...state,
+        blogs: [...action.blogs]
+      };
     default:
       return state;
   }

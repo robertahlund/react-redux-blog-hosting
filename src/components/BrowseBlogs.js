@@ -19,6 +19,17 @@ class BrowseBlogs extends Component {
       endIndex: 20,
       currentPage: 1,
       totalPages: 0
+    },
+    sort: {
+      name: {
+        sortOrder: "DESC"
+      },
+      author: {
+        sortOrder: "DESC"
+      },
+      date: {
+        sortOrder: "DESC"
+      }
     }
   };
 
@@ -26,6 +37,7 @@ class BrowseBlogs extends Component {
     document.title = "Browse blogs";
     const { fetchAllBlogs } = this.props;
     await fetchAllBlogs();
+    this.sortByName();
     const { blogs } = this.props;
     this.setState({
       loading: false,
@@ -60,9 +72,90 @@ class BrowseBlogs extends Component {
     }));
   };
 
+  sortByName = (order = "DESC") => {
+    const { blogs, sortByName } = this.props;
+    const blogSort = JSON.parse(JSON.stringify(blogs));
+    blogSort.sort((a, b) => {
+      const blogNameA = a.blogName.toLowerCase();
+      const blogNameB = b.blogName.toLowerCase();
+      if (blogNameA < blogNameB) {
+        return order !== "DESC" ? 1 : -1;
+      }
+      if (blogNameA > blogNameB) {
+        return order !== "DESC" ? -1 : 1;
+      }
+      return 0;
+    });
+    sortByName(blogSort);
+    this.setState({
+      ...this.state,
+      sort: {
+        ...this.state.sort,
+        name: {
+          sortOrder: order !== "DESC" ? "DESC" : "ASC"
+        }
+      }
+    });
+  };
+
+  sortByAuthor = (order = "DESC") => {
+    const { blogs, sortByAuthor } = this.props;
+    const blogSort = JSON.parse(JSON.stringify(blogs));
+    blogSort.sort((a, b) => {
+      const blogNameA = a.name.toLowerCase();
+      const blogNameB = b.name.toLowerCase();
+      if (blogNameA < blogNameB) {
+        return order !== "DESC" ? 1 : -1;
+      }
+      if (blogNameA > blogNameB) {
+        return order !== "DESC" ? -1 : 1;
+      }
+      return 0;
+    });
+    sortByAuthor(blogSort);
+    this.setState({
+      ...this.state,
+      sort: {
+        ...this.state.sort,
+        author: {
+          sortOrder: order !== "DESC" ? "DESC" : "ASC"
+        }
+      }
+    });
+  };
+
+  sortByDate = (order = "DESC") => {
+    const { blogs } = this.props;
+    this.setState({
+      ...this.state,
+      sort: {
+        ...this.state.sort,
+        date: {
+          sortOrder: order !== "DESC" ? "DESC" : "ASC"
+        }
+      }
+    });
+  };
+
+  sortPosts = (sortBy, order = "DESC") => {
+    switch (sortBy) {
+      case "name":
+        order !== "DESC" ? this.sortByName("ASC") : this.sortByName();
+        break;
+      case "author":
+        order !== "DESC" ? this.sortByAuthor("ASC") : this.sortByAuthor();
+        break;
+      case "date":
+        order !== "DESC" ? this.sortByDate("ASC") : this.sortByDate();
+        break;
+      default:
+        break;
+    }
+  };
+
   render() {
     const { blogs } = this.props;
-    const { loading, blogsToDisplay } = this.state;
+    const { loading, blogsToDisplay, sort } = this.state;
     const { startIndex, endIndex, currentPage, totalPages } = blogsToDisplay;
     console.log(blogs);
     return (
@@ -72,7 +165,7 @@ class BrowseBlogs extends Component {
           <Loading display={loading} />
         ) : (
           <div className="blog-info-row-wrapper">
-            <BrowseBlogsInfoHeader />
+            <BrowseBlogsInfoHeader sortPosts={this.sortPosts} sort={sort} />
             {blogs.map((blog, index) => {
               if (
                 index >= blogsToDisplay.startIndex &&

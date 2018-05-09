@@ -32,3 +32,17 @@ function allBlogsFetched(blogs) {
     blogs
   }
 }
+
+export function sortByName(blogs) {
+  return {
+    type: type.SORT_BLOGS_BY_NAME,
+    blogs
+  }
+}
+
+export function sortByAuthor(blogs) {
+  return {
+    type: type.SORT_BLOGS_BY_AUTHOR,
+    blogs
+  }
+}
