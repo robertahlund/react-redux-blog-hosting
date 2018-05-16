@@ -1,18 +1,22 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
-export const CommentDetail = ({comment}) => {
-  const {content, title, author, time} = comment;
+export const CommentDetail = ({ comment }) => {
+  const { content, title, author, time } = comment;
   return (
     <div className="comment">
       <h4 className="comment-title">{title}</h4>
       {content.map((commentContent, index) => {
         return (
-          <span className="content" key={index}>{commentContent}</span>
+          <span className="content" key={index}>
+            {commentContent}
+          </span>
         );
       })}
-      <span className="time">Posted by <span
-        className="author">{author}</span> @ {time}</span>
+      <span className="time">
+        Posted by <span className="author">{author}</span> @{" "}
+        {time.substring(0, time.length - 3)}
+      </span>
     </div>
   );
 };

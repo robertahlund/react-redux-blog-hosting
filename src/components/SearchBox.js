@@ -17,9 +17,26 @@ export const SearchBox = ({
 }) => {
   return (
     <div className="search-container">
+      <div className="search-field-container">
+        <form onSubmit={handleSearch}>
+          <div className="input-container">
+            <input
+              type="text"
+              onChange={handleSearchInput}
+              onBlur={closeSearch}
+              ref={searchRef}
+              value={searchString}
+              className={searchOpen ? "search-input" : "hidden-input"}
+              placeholder="Search for tags and titles."
+            />
+          </div>
+        </form>
+        <span className="jam jam-search" onClick={toggleSearch} />
+        <span data-jam="search" />
+      </div>
       {searchResultLength > 0 &&
         searchResultLength !== allPostsClone.length && (
-          <div>
+          <div className="search-result-container">
             <p
             >{`Your search for "${searchValue}" returned ${searchResultLength} ${
               searchResultLength > 1 ? "matches." : "match."
@@ -27,18 +44,6 @@ export const SearchBox = ({
             <a onClick={displayAllPosts}>View all posts</a>
           </div>
         )}
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          onChange={handleSearchInput}
-          onBlur={closeSearch}
-          ref={searchRef}
-          value={searchString}
-          className={searchOpen ? "search-input" : "hidden-input"}
-          placeholder="Search for tags and titles."
-        />
-      </form>
-      <span className="jam jam-search" onClick={toggleSearch} />
     </div>
   );
 };

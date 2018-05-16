@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "../css/UserProfilePresentational.css";
 import { Link } from "react-router-dom";
 
 export const UserProfilePresentational = ({ form, loading }) => {
@@ -18,7 +17,7 @@ export const UserProfilePresentational = ({ form, loading }) => {
           <li>
             <span className="label">Blog name:</span>
             <Link to={`/blog/${uid}/${blogName.replace(/ /g, "-")}`}>
-              {blogName}
+              {" " + blogName}
             </Link>
           </li>
         </ul>

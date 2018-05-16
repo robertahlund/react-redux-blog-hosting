@@ -3,7 +3,8 @@ import * as type from "../actions/actionTypes";
 const initialState = {
   allPosts: [],
   allPostsClone: [],
-  searchValue: ""
+  searchValue: "",
+  postToEdit: null
 };
 
 export default function postReducer(state = initialState, action) {
@@ -27,8 +28,6 @@ export default function postReducer(state = initialState, action) {
         allPosts: [...state.allPostsClone]
       };
     case type.CREATE_NEW_COMMENT:
-      // action.postId
-      // action.allComments
       return {
         ...state,
         allPosts: state.allPosts.map(post => {
@@ -49,6 +48,22 @@ export default function postReducer(state = initialState, action) {
             comments: [...action.allComments]
           };
         })
+      };
+    case type.DELETE_POST:
+      return {
+        ...state,
+        allPosts: state.allPosts.filter(post => post.id !== action.id),
+        allPostsClone: state.allPostsClone.filter(post => post.id !== action.id)
+      };
+    case type.EDIT_POST:
+      return {
+        ...state,
+        postToEdit: action.post
+      };
+    case type.SUBMIT_EDIT_POST:
+      return {
+        ...state,
+        postToEdit: null
       };
     default:
       return state;

@@ -1,0 +1,36 @@
+@import "App.scss";
+
+.post-menu {
+  position: absolute;
+  right: -6px;
+  color: $primary-color;
+  cursor: pointer;
+}
+
+.post-menu-container {
+  position: absolute;
+  right: -200px;
+  top: -105px;
+  background: #fff;
+  border-radius: 0 0 4px 4px;
+  box-shadow: $box-shadow;
+  &:before {
+    content: "";
+    height: 4px;
+    width: 100%;
+    background: $top-gradient-fallback;
+    background: $top-gradient;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  ul {
+    list-style: none;
+    display: inline-block;
+    padding: 15px 0;
+    li {
+      @extend a;
+      padding: 10px 15px;
+    }
+  }
+}

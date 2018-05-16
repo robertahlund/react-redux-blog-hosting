@@ -9,6 +9,7 @@ export const CREATE_NEW_COMMENT = "CREATE_NEW_COMMENT";
 export const EDIT_COMMENT = "EDIT_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const EDIT_POST = "EDIT_POST";
+export const SUBMIT_EDIT_POST = "SUBMIT_EDIT_POST";
 export const DELETE_POST = "DELETE_POST";
 
 export const CREATE_NEW_ACCOUNT = "CREATE_NEW_ACCOUNT";

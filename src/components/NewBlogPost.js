@@ -5,6 +5,7 @@ import * as postActions from "../actions/postActions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { NewBlogPostForm } from "./NewBlogPostForm";
+import "../css/NewBlogPost.css";
 
 class NewBlogPost extends Component {
   state = {
@@ -30,11 +31,30 @@ class NewBlogPost extends Component {
   };
 
   componentDidMount = () => {
-    document.title = "Create a new post";
+    const { postToEdit } = this.props;
+    if (postToEdit) {
+      document.title = "Edit post";
+      this.setFormValues(postToEdit);
+    } else {
+      document.title = "Create a new post";
+    }
     const { displayName, uid } = this.props.auth;
     this.setState({
       author: displayName,
       authorUid: uid
+    });
+  };
+
+  setFormValues = post => {
+    this.setState({
+      form: {
+        title: post.title,
+        tags: post.tags.map(tag => `#${tag} `).join(""),
+        content: post.content.join("\n"),
+        comments: post.comments,
+        author: post.author,
+        authorUid: post.authorUid
+      }
     });
   };
 
@@ -58,12 +78,15 @@ class NewBlogPost extends Component {
 
   formatFormValues = () => {
     const formValues = this.state.form;
+    console.log(formValues.tags);
     formValues.tags = formValues.tags
+      .trim()
       .split(/\s*#[#\s]*/)
       .join("#")
       .toLowerCase()
       .split("#");
     formValues.tags.splice(0, 1);
+    console.log(formValues.tags);
     formValues.content.indexOf("\n") > -1
       ? (formValues.content = formValues.content.split("\n"))
       : (formValues.content = [formValues.content]);
@@ -118,8 +141,56 @@ class NewBlogPost extends Component {
     }
   };
 
+  updatePost = async () => {
+    const { id } = this.props.postToEdit;
+    try {
+      this.validateInputs();
+    } catch (error) {
+      this.setState({
+        message: {
+          type: "error",
+          text: error.message
+        }
+      });
+      return;
+    }
+    this.setState({
+      loading: true
+    });
+    const formValues = this.formatFormValues();
+    const { editPostSubmit } = this.props;
+    try {
+      await editPostSubmit(formValues, id);
+      this.setState({
+        loading: false,
+        message: {
+          type: "success",
+          text: "Successfully updated post!"
+        },
+        form: {
+          title: "",
+          tags: "",
+          content: [],
+          comments: [],
+          author: "",
+          authorUid: ""
+        }
+      });
+    } catch (error) {
+      this.setState({
+        loading: false,
+        message: {
+          type: "error",
+          text: error.message
+        }
+      });
+    }
+  };
+
   render() {
     const { message, loading, form } = this.state;
+    const { postToEdit } = this.props;
+    console.log(this.props);
     return (
       <NewBlogPostForm
         handleFormChange={this.handleFormChange}
@@ -127,13 +198,23 @@ class NewBlogPost extends Component {
         loading={loading}
         message={message}
         form={form}
+        postToEdit={postToEdit}
+        updatePost={this.updatePost}
       />
     );
   }
+}
+
+function mapStateToProps(state) {
+  return {
+    postToEdit: state.posts.postToEdit
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(postActions, dispatch);
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(NewBlogPost));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NewBlogPost)
+);

@@ -73,23 +73,27 @@ export default class Login extends Component {
         <div className="new-post-form">
           <form>
             <label htmlFor="username">Email</label>
-            <input
-              id="username"
-              type="text"
-              data-change="username"
-              value={username}
-              onChange={this.handleFormChange}
-              className="new-post-input"
-            />
+            <div className="input-container">
+              <input
+                id="username"
+                type="text"
+                data-change="username"
+                value={username}
+                onChange={this.handleFormChange}
+                className="new-post-input"
+              />
+            </div>
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              data-change="password"
-              value={password}
-              onChange={this.handleFormChange}
-              className="new-post-input"
-            />
+            <div className="input-container">
+              <input
+                id="password"
+                type="password"
+                data-change="password"
+                value={password}
+                onChange={this.handleFormChange}
+                className="new-post-input"
+              />
+            </div>
             <div className="log-in-form-bottom">
               <FeedbackMessage message={message} />
               <div className="log-in-action-container">

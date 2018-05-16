@@ -4,7 +4,6 @@ import { Loading } from "./Loading";
 import CommentForm from "./CommentForm";
 import { CommentDetail } from "./CommentDetail";
 import { CommentFooter } from "./CommentFooter";
-import { FeedbackMessage } from "./FeedbackMessage";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as postActions from "../actions/postActions";
@@ -125,8 +124,8 @@ class Comments extends Component {
           auth={auth}
           getComments={this.getComments}
           handleFeedbackMessage={this.handleFeedbackMessage}
+          message={message}
         />
-        <FeedbackMessage message={message} />
         <div className="comments">
           <Loading display={loading} />
           {comments.map((comment, index) => {

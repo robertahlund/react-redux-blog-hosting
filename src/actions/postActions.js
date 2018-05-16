@@ -97,3 +97,54 @@ function newCommentCreated(postId, allComments) {
     allComments
   };
 }
+
+export function deleteBlogPost(id) {
+  return async function(dispatch, getState) {
+    const databaseRef = db.collection("posts").doc(id);
+    try {
+      await databaseRef.delete();
+      dispatch(blogPostDeleted(id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+function blogPostDeleted(id) {
+  console.log("del");
+  return {
+    type: type.DELETE_POST,
+    id
+  };
+}
+
+export function editPost(post) {
+  return {
+    type: type.EDIT_POST,
+    post
+  };
+}
+
+export function editPostSubmit(post, id) {
+  console.log(post, id);
+  return async function(dispatch, getState) {
+    const databaseRef = db.collection("posts").doc(id);
+    try {
+      await databaseRef.update({
+        title: post.title,
+        content: post.content,
+        tags: post.tags,
+        edited: new Date().toLocaleString()
+      });
+      dispatch(postUpdated());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+function postUpdated() {
+  return {
+    type: type.SUBMIT_EDIT_POST
+  };
+}

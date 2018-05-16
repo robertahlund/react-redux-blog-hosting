@@ -10,8 +10,8 @@ export const BrowseBlogsInfoHeader = ({ sortPosts, sort }) => {
         <span
           className={
             sort.name.sortOrder === "DESC"
-              ? "jam jam-angle-down"
-              : "jam jam-angle-top"
+              ? "jam jam-chevron-down"
+              : "jam jam-chevron-up"
           }
         />
       </span>
@@ -20,8 +20,8 @@ export const BrowseBlogsInfoHeader = ({ sortPosts, sort }) => {
         <span
           className={
             sort.author.sortOrder === "DESC"
-              ? "jam jam-angle-down"
-              : "jam jam-angle-top"
+              ? "jam jam-chevron-down"
+              : "jam jam-chevron-up"
           }
         />
       </span>
@@ -30,8 +30,8 @@ export const BrowseBlogsInfoHeader = ({ sortPosts, sort }) => {
         <span
           className={
             sort.date.sortOrder === "DESC"
-              ? "jam jam-angle-down"
-              : "jam jam-angle-top"
+              ? "jam jam-chevron-down"
+              : "jam jam-chevron-up"
           }
         />
       </span>

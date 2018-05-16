@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as authActions from "../actions/authActions";
 import { bindActionCreators } from "redux";
+import "../css/UserProfile.css";
 
 const db = firebase.firestore();
 
@@ -123,7 +124,7 @@ class UserProfile extends Component {
           headerText={this.userIsProfileOwner()}
         />
         <Loading display={loading} />
-        {auth && auth.info.uid === uid ? (
+        {auth && auth.info.uid === uid && !loading ? (
           <UserProfileEditable
             form={form}
             handleFormChange={this.handleFormChange}

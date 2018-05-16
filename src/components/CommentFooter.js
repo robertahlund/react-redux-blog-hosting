@@ -1,36 +1,51 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
-export const CommentFooter = (
-  {
-    commentsToDisplay, comments, loading, handleCommentCollapseFromChild,
-    handleCommentPaginationIncrease, handleCommentPaginationDecrease
-  }) => {
-  const {startIndex, endIndex, currentPage, totalPages} = commentsToDisplay;
+export const CommentFooter = ({
+  commentsToDisplay,
+  comments,
+  loading,
+  handleCommentCollapseFromChild,
+  handleCommentPaginationIncrease,
+  handleCommentPaginationDecrease
+}) => {
+  const { startIndex, endIndex, currentPage, totalPages } = commentsToDisplay;
   if (loading) {
     return null;
   } else {
     return (
       <div className="comment-footer">
-        {startIndex >= comments.length ? (
-          <p>You've reached the end :( <a onClick={handleCommentCollapseFromChild}>Close comments</a></p>
-        ) : (
-          <React.Fragment>
-            {startIndex >= 3 &&
-            <button type="button" className="button"
-                    onClick={handleCommentPaginationDecrease}>Show fewer commments
-            </button>
-            }
-            <React.Fragment>
-              <p>Currently showing page: {currentPage} of {totalPages}</p>
-              {endIndex < comments.length &&
-              <button type="button" className="button"
-                      onClick={handleCommentPaginationIncrease}>Show more commments
-              </button>
-              }
-            </React.Fragment>
-          </React.Fragment>
+        {totalPages > 0 && (
+          <p>
+            Currently showing page: {currentPage} of {totalPages}
+          </p>
         )}
+        {startIndex >= comments.length ? (
+          <p>
+            There is nothing here :({" "}
+            <a onClick={handleCommentCollapseFromChild}>Close comments</a>
+          </p>
+        ) : totalPages > 1 ? (
+          <div className="button-container">
+            <button
+              type="button"
+              className="button"
+              onClick={handleCommentPaginationDecrease}
+              style={{ visibility: startIndex >= 3 ? "visible" : "hidden" }}
+            >
+              Show fewer commments
+            </button>
+            {endIndex < comments.length && (
+              <button
+                type="button"
+                className="button"
+                onClick={handleCommentPaginationIncrease}
+              >
+                Show more commments
+              </button>
+            )}
+          </div>
+        ) : null}
       </div>
     );
   }

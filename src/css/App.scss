@@ -6,18 +6,21 @@ $global-border-radius: 4px;
 $global-border: 1px solid #d1d1d1;
 $global-line-height: 1.7em;
 $center: 0 auto;
-$global-font-color: #606c76;
-$primary-color: #9b4dca;
+$global-font-color: #0F0F0F;
+$primary-color: #0F0F0F;
 $secondary-color: #f4f5f6;
 $global-font-weight: 300;
 $button-hover-color: #606c76;
 $fat-font-weight: 400;
+$top-gradient: linear-gradient(90deg, rgba(54,209,220,1) 0%, rgba(91,134,229,1) 100%);
+$top-gradient-fallback: rgb(54,209,220);
+$box-shadow: 0 6px 15px 0 rgba(0,0,0,0.07);
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-family: 'Helvetica', 'Arial', sans-serif;
   letter-spacing: $global-letter-spacing;
   font-weight: $global-font-weight;
   color: $global-font-color;
@@ -26,11 +29,12 @@ $fat-font-weight: 400;
 
 body {
   font-size: $global-font-size;
+  background: #F8F8F8;
 }
 
 .loader {
-  border: 4px solid $secondary-color;
-  border-top: 4px solid $primary-color;
+  border: 4px solid #F8F8F8;
+  border-top: 4px solid $top-gradient-fallback;
   border-radius: 50%;
   width: 70px;
   height: 70px;
@@ -61,32 +65,6 @@ body {
   display: block;
 }
 
-.menu {
-  background-color: $secondary-color;
-  border-bottom: 1px solid #d1d1d1;
-  .inner {
-    display: flex;
-    justify-content: space-between;
-    width: 70%;
-    margin: $center;
-  }
-}
-
-.menu {
-  ul {
-    list-style: none;
-    li {
-      padding: 30px 20px;
-      display: inline-block;
-      transition: color .3s;
-      cursor: pointer;
-    }
-    li:last-child {
-      padding: 30px 0 30px 20px;
-    }
-  }
-}
-
 li {
   &:hover {
     color: $primary-color;
@@ -103,27 +81,17 @@ a {
   }
 }
 
-.logo {
-  padding: 30px 20px 30px 0;
-  .jam-book {
-    color: $primary-color;
-    font-size: 1.2em;
-    vertical-align: -4px;
-    padding-right: 2px;
-  }
-}
-
 .button {
   border: none;
   width: 250px;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 400;
   color: #fff;
   letter-spacing: 0.1rem;
   font-size: .8rem;
-  background: $primary-color;
+  background: $top-gradient;
   margin-top: 12px;
-  transition: background .3s;
+  transition: filter .3s;
   cursor: pointer;
   padding: $form-padding;
   display: block;
@@ -132,39 +100,14 @@ a {
   outline: 0;
   position: relative;
   &:hover {
-    background: $button-hover-color;
-  }
-}
-
-.header {
-  background-color: $secondary-color;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  h1 {
-    font-size: 1.8em;
-    letter-spacing: -0.04em;
-  }
-  .jam-pencil {
-    padding-bottom: 20px;
-    color: $primary-color;
-    font-size: 4em;
-  }
-  .jam-document, .jam-shield-error {
-    @extend .jam-pencil;
-    padding-left: 5px;
-  }
-  .jam-padlock, .jam-home, .jam-user, .jam-book {
-    @extend .jam-pencil
+    filter: brightness(.95);
   }
 }
 
 .new-post-form {
-  width: 90%;
+  width: 60%;
   margin: $center;
-  padding: 50px 0;
+  padding: 0;
 }
 
 label {
@@ -201,102 +144,4 @@ form {
 
 .new-post-textarea {
   @extend .new-post-input;
-}
-
-.post {
-  @extend .new-post-form;
-  width: 50%;
-  border-left: 2px solid $primary-color;
-  padding: 0 0 0 30px;
-  margin: 100px auto;
-  display: flex;
-  flex-direction: column;
-  h3 {
-    font-size: 1.4em;
-    letter-spacing: -0.02em;
-    text-align: center;
-    padding-bottom: 20px;
-    margin-left: -32px;
-  }
-  p {
-    padding: 20px 0;
-  }
-  .post-footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0 0 0;
-  }
-  .jam-angle-top {
-    color: $primary-color;
-    padding-left: 5px;
-    vertical-align: -3px;
-    transform: rotate(0deg);
-    display: inline-block;
-    transition: all .3s;
-  }
-  .rotate {
-    @extend .jam-angle-top;
-    transform: rotate(180deg);
-    vertical-align: 1px;
-    padding-right: 5px;
-  }
-  .tags {
-    align-self: flex-end;
-    font-style: italic;
-  }
-}
-
-
-.comment {
-  display: flex;
-  flex-direction: column;
-  padding: 25px;
-  background: $secondary-color;
-  margin: 10px 0;
-  border-left: 2px solid $global-font-color;
-  .time {
-    align-self: flex-end;
-  }
-  .author {
-    font-weight: $fat-font-weight;
-  }
-
-  .content:nth-child(2), .content:last-child {
-    padding: 15px 0 0 0;
-  }
-
-  h4 {
-    font-weight: $fat-font-weight;
-    font-size: 1.1em;
-  }
-}
-
-.comments {
-  display: flex;
-  flex-direction: column;
-  p {
-    text-align: center;
-    a {
-      display: block;
-    }
-  }
-  .comment-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    a {
-      margin-top: 12px;
-    }
-  }
-}
-
-.comment-section {
-  padding: 25px 0 25px 0;
-  form {
-    @extend form;
-    width: 100%;
-    border-left: 2px solid $global-font-color;
-    padding-left: 20px;
-    margin-bottom: 20px;
-  }
 }

@@ -16,33 +16,33 @@ export function fetchAllBlogs() {
         allBlogs.push(userData);
         //console.log(doc.id, " => ", doc.data());
       });
-      console.log(allBlogs)
+      console.log(allBlogs);
       dispatch(allBlogsFetched(allBlogs));
     } catch (error) {
       console.log(error);
       throw error;
     }
-    dispatch(allBlogsFetched(allBlogs))
-  }
+    dispatch(allBlogsFetched(allBlogs));
+  };
 }
 
 function allBlogsFetched(blogs) {
   return {
     type: type.FETCH_ALL_BLOGS,
     blogs
-  }
+  };
 }
 
 export function sortByName(blogs) {
   return {
     type: type.SORT_BLOGS_BY_NAME,
     blogs
-  }
+  };
 }
 
 export function sortByAuthor(blogs) {
   return {
     type: type.SORT_BLOGS_BY_AUTHOR,
     blogs
-  }
+  };
 }

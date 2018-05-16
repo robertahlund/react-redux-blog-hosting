@@ -1,0 +1,82 @@
+@import "App.scss";
+
+.new-post {
+  padding: 0 0 100px 0;
+  .new-post-form {
+    width: 60%;
+    max-width: 768px;
+    margin: $center;
+    padding: 0;
+    position: relative;
+    border-radius: 0 0 4px 4px;
+    box-shadow: $box-shadow;
+    background: #fff;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: "";
+      background: $top-gradient-fallback;
+      background: $top-gradient;
+      height: 8px;
+      width: 100%;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 97%;
+      margin: $center;
+      padding: 40px 15px;
+      input, textarea {
+        background: #f3f3f3;
+        border-radius: 4px 4px 0 0;
+        border: none;
+        &:focus {
+          border: none;
+        }
+      }
+      .input-container {
+        position: relative;
+        &:after {
+          content: "";
+          height: 2px;
+          background: $top-gradient-fallback;
+          background: $top-gradient;
+          width: 100%;
+          position: absolute;
+          bottom: 12px;
+          left: 0;
+        }
+      }
+    }
+  }
+}
+
+label {
+  color: $primary-color;
+  font-weight: $fat-font-weight;
+}
+
+.new-post-input {
+  padding: $form-padding;
+  display: block;
+  width: 100%;
+  margin: $form-margin;
+  border: $global-border;
+  border-radius: $global-border-radius;
+  outline: 0;
+  transition: border .3s;
+  font-size: 1em;
+  &:focus {
+    border: 1px solid $primary-color;
+  }
+}
+
+.button-align-right, .new-post-button {
+  @extend .button;
+  align-self: flex-end;
+}
+
+.new-post-textarea {
+  @extend .new-post-input;
+}

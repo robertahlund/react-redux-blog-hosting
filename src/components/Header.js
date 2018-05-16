@@ -1,16 +1,15 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
+import "../css/Header.css";
 
-export const Header = ({iconName, headerText}) => {
+export const Header = ({ headerText }) => {
   return (
     <header className="header">
-      <span className={iconName}></span>
       <h1>{headerText}</h1>
     </header>
   );
 };
 
 Header.propTypes = {
-  iconName: PropTypes.string.isRequired,
   headerText: PropTypes.string.isRequired
 };

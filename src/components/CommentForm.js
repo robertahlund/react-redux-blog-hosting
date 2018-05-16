@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import * as postActions from "../actions/postActions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { FeedbackMessage } from "./FeedbackMessage";
 
 class CommentForm extends Component {
   state = {
@@ -18,7 +19,8 @@ class CommentForm extends Component {
 
   static propTypes = {
     auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    postId: PropTypes.string.isRequired
+    postId: PropTypes.string.isRequired,
+    message: PropTypes.object.isRequired
   };
 
   componentDidMount = () => {
@@ -82,37 +84,48 @@ class CommentForm extends Component {
         content: ""
       }
     });
+    handleFeedbackMessage({
+      message: {
+        type: "success",
+        text: "Your comment was successfully posted."
+      }
+    });
   };
 
   render() {
     console.log(this.props);
-    const { auth } = this.props;
+    const { auth, message } = this.props;
     const { loading } = this.state;
     if (auth) {
       return (
         <form>
           <h3>Post a comment</h3>
           <label htmlFor="title">Title</label>
-          <input
-            id="title"
-            type="text"
-            data-change="title"
-            placeholder="Title"
-            value={this.state.form.title}
-            onChange={this.handleFormChange}
-            className="new-post-input"
-          />
+          <div className="input-container">
+            <input
+              id="title"
+              type="text"
+              data-change="title"
+              placeholder="Title"
+              value={this.state.form.title}
+              onChange={this.handleFormChange}
+              className="new-post-input"
+            />
+          </div>
           <label htmlFor="content">Comment</label>
-          <textarea
-            name="content"
-            data-change="content"
-            id="content"
-            rows="3"
-            placeholder="This is content."
-            value={this.state.form.content}
-            onChange={this.handleFormChange}
-            className="new-post-textarea"
-          />
+          <div className="input-container">
+            <textarea
+              name="content"
+              data-change="content"
+              id="content"
+              rows="3"
+              placeholder="This is content."
+              value={this.state.form.content}
+              onChange={this.handleFormChange}
+              className="new-post-textarea"
+            />
+          </div>
+          <FeedbackMessage message={message} />
           <button
             type="button"
             onClick={this.submitPost}

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import firebase from "../firebaseConfig";
 import PropTypes from "prop-types";
+import "../css/Menu.css";
 
 export default class Menu extends Component {
   static propTypes = {
@@ -23,33 +24,45 @@ export default class Menu extends Component {
       <nav className="menu">
         <div className="inner">
           <div className="logo">
-            <span className="jam jam-book" />
             <span>
-              <Link to="/">Placeholder</Link>
+              <NavLink to="/">Blog</NavLink>
             </span>
           </div>
           <ul>
             {auth ? (
               <li>
-                <Link to="/new-post/">Create new post</Link>
+                <NavLink to="/new-post/" activeStyle={{ fontWeight: 800 }}>
+                  Create new post
+                </NavLink>
               </li>
             ) : null}
             {auth ? (
               <li>
-                <Link to={`/blog/${uid}/${info.blogName}`}>Show all posts</Link>
+                <NavLink
+                  to={`/blog/${uid}/${info.blogName}`}
+                  activeStyle={{ fontWeight: 800 }}
+                >
+                  Show all posts
+                </NavLink>
               </li>
             ) : null}
             <li>
-              <Link to={"/browse/"}>Browse blogs</Link>
+              <NavLink to={"/browse/"} activeStyle={{ fontWeight: 800 }}>
+                Browse blogs
+              </NavLink>
             </li>
             {auth ? (
               <li>
-                <Link to={`/user/${uid}`}>Profile</Link>
+                <NavLink to={`/user/${uid}`} activeStyle={{ fontWeight: 800 }}>
+                  Profile
+                </NavLink>
               </li>
             ) : null}
             {!auth ? (
               <li>
-                <Link to="/login/">Log in</Link>
+                <NavLink to="/login/" activeStyle={{ fontWeight: 800 }}>
+                  Log in
+                </NavLink>
               </li>
             ) : (
               <li onClick={this.handleLogout}>

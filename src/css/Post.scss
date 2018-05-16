@@ -1,0 +1,163 @@
+@import "App.scss";
+
+.post {
+  @extend .new-post-form;
+  width: 60%;
+  max-width: 768px;
+  margin: 100px auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: $box-shadow;
+  padding: 0 25px 25px 25px;
+  background: #fff;
+  &:before {
+    content: "";
+    height: 8px;
+    width: 100%;
+    background: $top-gradient-fallback;
+    background: $top-gradient;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .jam {
+    font-size: 1.2em;
+  }
+  h1 {
+    font-size: 2em;
+    letter-spacing: .01rem;
+    text-align: center;
+    padding: 25px 0;
+    font-weight: 800;
+  }
+  h3 {
+    @extend h1;
+    font-size: 1.5em;
+  }
+  p {
+    padding: 15px 0;
+    text-align: justify;
+  }
+  .post-footer {
+    width: 100%;
+    padding: 10px 0 0 0;
+    position: relative;
+    .comments-icon {
+      padding: 0 5px 0 0;
+      vertical-align: -3px;
+    }
+    .time {
+      text-align: right;
+      width: 100%;
+      display: block;
+      padding-bottom: 10px;
+    }
+  }
+  .tags {
+    align-self: flex-end;
+    font-style: italic;
+  }
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  background: $secondary-color;
+  margin: 10px 0;
+  position: relative;
+  text-align: justify;
+  background: #fff;
+  box-shadow: $box-shadow;
+  &:before {
+    content: "";
+    height: 4px;
+    width: 100%;
+    background: $top-gradient-fallback;
+    background: $top-gradient;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .time {
+    align-self: flex-end;
+    font-size: .9em;
+  }
+  .author {
+    font-weight: $fat-font-weight;
+  }
+
+  .content {
+    padding: 15px 0 0 0;
+  }
+
+  h4 {
+    font-weight: $fat-font-weight;
+    font-size: 1.1em;
+  }
+}
+
+.comments {
+  display: flex;
+  flex-direction: column;
+  p {
+    text-align: center;
+    padding: 15px 0 7px 0;
+    a {
+      display: block;
+    }
+  }
+  .comment-footer {
+    a {
+      margin-top: 12px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+.comment-section {
+  padding: 25px 0 25px 0;
+  form {
+    @extend form;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    box-shadow: $box-shadow;
+    padding: 0 25px 25px 25px;
+    &:before {
+      content: "";
+      height: 8px;
+      width: 100%;
+      background: $top-gradient-fallback;
+      background: $top-gradient;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    input, textarea {
+      background: #f3f3f3;
+      border-radius: 4px 4px 0 0;
+      border: none;
+      &:focus {
+        @extend input;
+      }
+    }
+    .input-container {
+      position: relative;
+      &:after {
+        content: "";
+        height: 2px;
+        background: $top-gradient-fallback;
+        background: $top-gradient;
+        width: 100%;
+        position: absolute;
+        bottom: 12px;
+        left: 0;
+      }
+    }
+  }
+}

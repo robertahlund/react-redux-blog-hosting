@@ -1,0 +1,51 @@
+@import "App.scss";
+
+.menu {
+  background-color: #F8F8F8;
+  position: relative;
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin: $center;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 8px;
+    width: 100%;
+    background: $top-gradient-fallback;
+    background: $top-gradient;
+  }
+  ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    li {
+      padding: 35px 20px;
+      display: inline-block;
+      transition: color .3s;
+      cursor: pointer;
+      font-size: 1.1em;
+      a {
+        letter-spacing: .01rem;
+      }
+    }
+    li:last-child {
+      padding: 30px 0 30px 20px;
+    }
+  }
+}
+
+.logo {
+  padding: 35px 20px 30px 0;
+  span {
+    a {
+      font-weight: 800;
+      font-size: 1.2em;
+      letter-spacing: .01rem;
+    }
+  }
+}

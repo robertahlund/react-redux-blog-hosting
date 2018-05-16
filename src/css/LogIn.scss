@@ -1,3 +1,5 @@
+@import "App.scss";
+
 .log-in-action-container {
   display: flex;
   flex-direction: row;
@@ -9,7 +11,7 @@
 
 .loader-button {
   border: 2px solid #F4F5F6;
-  border-top: 2px solid #9B4DCA;
+  border-top: 2px solid $top-gradient-fallback;
   border-radius: 50%;
   width: 15px;
   height: 15px;

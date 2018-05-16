@@ -1,8 +1,29 @@
+@import "App.scss";
+
+.all-blogs {
+  padding: 0 0 100px 0;
+}
+
 .blog-info-row-wrapper {
   width: 70%;
   position: relative;
   margin: 0 auto;
-  padding: 50px 0;
+  padding: 25px 25px;
+  background: #fff;
+  box-shadow: $box-shadow;
+  &:before {
+    content: "";
+    height: 8px;
+    width: 100%;
+    background: $top-gradient-fallback;
+    background: $top-gradient;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .center {
+    padding: 20px 0;
+  }
 }
 
 .blog-info-row-header, .blog-info-row {
@@ -26,10 +47,11 @@
 
 .blog-info-row-header {
   span {
+    color: $primary-color;
     font-weight: 400;
     cursor: pointer;
     .jam {
-      font-size: .7em;
+      font-size: .8em;
       padding: 0 0 0 5px;
     }
   }

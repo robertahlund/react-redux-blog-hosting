@@ -16,43 +16,51 @@ export const CreateAccountForm = ({
     <div className="new-post-form">
       <form>
         <label htmlFor="name">Full name</label>
-        <input
-          id="name"
-          type="text"
-          data-change="name"
-          value={name}
-          onChange={handleFormChange}
-          className="new-post-input"
-          placeholder="Name Lastname"
-        />
+        <div className="input-container">
+          <input
+            id="name"
+            type="text"
+            data-change="name"
+            value={name}
+            onChange={handleFormChange}
+            className="new-post-input"
+          />
+        </div>
         <label htmlFor="name">Name your blog</label>
-        <input
-          id="blogname"
-          type="text"
-          data-change="blogName"
-          value={blogName}
-          onChange={handleFormChange}
-          className="new-post-input"
-          placeholder="En kass blogg"
-        />
+        <div className="input-container">
+          <input
+            id="blogname"
+            type="text"
+            data-change="blogName"
+            value={blogName}
+            onChange={handleFormChange}
+            className="new-post-input"
+          />
+        </div>
         <label htmlFor="username">Email</label>
-        <input
-          id="username"
-          type="text"
-          data-change="email"
-          value={email}
-          onChange={handleFormChange}
-          className="new-post-input"
-        />
+        <div className="input-container">
+          <input
+            id="username"
+            type="text"
+            data-change="email"
+            value={email}
+            onChange={handleFormChange}
+            className="new-post-input"
+            autoComplete="new-password"
+          />
+        </div>
         <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          data-change="password"
-          value={password}
-          onChange={handleFormChange}
-          className="new-post-input"
-        />
+        <div className="input-container">
+          <input
+            id="password"
+            type="password"
+            data-change="password"
+            value={password}
+            onChange={handleFormChange}
+            className="new-post-input"
+            autoComplete="new-password"
+          />
+        </div>
         <FeedbackMessage message={message} />
         <button
           type="button"

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { Header } from "./Header";
 import { Loading } from "./Loading";
@@ -56,17 +56,30 @@ class AllPosts extends Component {
   componentDidUpdate = async prevProps => {
     //URL has changed
     if (this.props.location.pathname !== prevProps.location.pathname) {
-      const { search, searchWord } = this.props.match.params;
+      this.setState({
+        loading: true
+      });
+      const { search, searchWord, blogName, uid } = this.props.match.params;
+      document.title = `${blogName.split(/[-]/).join(" ")}`;
+      await this.setState({
+        currentBlogData: {
+          blogName: blogName.split(/[-]/).join(" "),
+          blogUid: uid
+        }
+      });
       if (!search && !searchWord) {
-        this.displayAllPosts();
+        const { fetchAllPosts } = this.props;
+        await fetchAllPosts(uid);
         this.setState({
-          searchResultLength: null
+          searchResultLength: null,
+          loading: false
         });
       } else {
-        this.setState({
-          searchString: searchWord
-        });
         await this.getAndFilterAllPosts(searchWord, false);
+        this.setState({
+          searchString: searchWord,
+          loading: false
+        });
       }
     }
   };
@@ -192,25 +205,30 @@ class AllPosts extends Component {
           searchRef={this.searchInput}
           searchString={searchString}
         />
-        <Loading display={loading} />
-        <NoPostsMessage
-          allPostsClone={allPostsClone}
-          loading={loading}
-          searchResultLength={searchResultLength}
-        />
-        <SearchResultMessage
-          displayAllPosts={this.displayAllPosts}
-          searchResultLength={searchResultLength}
-          searchValue={searchValue}
-        />
-        {allPosts.map((post, index) => (
-          <Post
-            auth={auth}
-            post={post}
-            handleSearchByTag={this.handleSearchByTag}
-            key={index}
-          />
-        ))}
+        {!loading ? (
+          <Fragment>
+            <NoPostsMessage
+              allPostsClone={allPostsClone}
+              loading={loading}
+              searchResultLength={searchResultLength}
+            />
+            <SearchResultMessage
+              displayAllPosts={this.displayAllPosts}
+              searchResultLength={searchResultLength}
+              searchValue={searchValue}
+            />
+            {allPosts.map((post, index) => (
+              <Post
+                auth={auth}
+                post={post}
+                handleSearchByTag={this.handleSearchByTag}
+                key={index}
+              />
+            ))}
+          </Fragment>
+        ) : (
+          <Loading display={loading} />
+        )}
       </section>
     );
   }

@@ -3,6 +3,7 @@ import "firebase/firestore";
 import Comments from "./Comments";
 import PropTypes from "prop-types";
 import { PostDetail } from "./PostDetail";
+import "../css/Post.css";
 
 export default class Post extends Component {
   state = {
@@ -16,10 +17,8 @@ export default class Post extends Component {
   };
 
   handleComments = event => {
-    //TODO better solution maybe
     const target = event.currentTarget;
-    const commentsCanBeCollapsed =
-      target.firstElementChild.className === "jam jam-angle-top";
+    const commentsCanBeCollapsed = this.state.commentsToLoad;
     if (commentsCanBeCollapsed) {
       this.setState({
         commentsToLoad: ""
@@ -50,6 +49,7 @@ export default class Post extends Component {
           handleSearchByTag={handleSearchByTag}
           post={post}
           commentsToLoad={commentsToLoad}
+          auth={auth}
         />
         {commentsToLoad === id && (
           <Comments

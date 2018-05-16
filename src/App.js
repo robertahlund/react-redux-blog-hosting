@@ -87,6 +87,17 @@ class App extends Component {
           />
           <Route
             exact
+            path="/edit-post/"
+            render={props =>
+              auth ? (
+                <NewBlogPost {...props} auth={auth} />
+              ) : (
+                <Redirect to="/" />
+              )
+            }
+          />
+          <Route
+            exact
             path="/blog/:uid/:blogName/:search?/:searchWord?"
             render={props => <AllPosts {...props} auth={auth} />}
           />
@@ -102,7 +113,10 @@ class App extends Component {
           />
           <Route
             render={props => (
-              <Header headerText={"404 - Not found"} iconName="jam jam-shield-error" />
+              <Header
+                headerText={"404 - Not found"}
+                iconName="jam jam-shield-error"
+              />
             )}
           />
         </Switch>

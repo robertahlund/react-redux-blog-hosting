@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
 export const BrowseBlogsPagination = ({
@@ -11,33 +11,35 @@ export const BrowseBlogsPagination = ({
   handleBlogPaginationIncrease
 }) => {
   return (
-    <div className="browse-pagination">
-      <React.Fragment>
-        {startIndex >= 20 && (
-          <button
-            type="button"
-            className="button"
-            onClick={handleBlogPaginationDecrease}
-          >
-            Previous page
-          </button>
-        )}
-        <React.Fragment>
-          <p>
-            Currently showing page: {currentPage} of {totalPages}
-          </p>
-          {endIndex < blogs.length && (
+    <Fragment>
+      <p className="center">
+        Currently showing page: {currentPage} of {totalPages}
+      </p>
+      <div className="browse-pagination">
+        <Fragment>
+          {startIndex >= 20 && (
             <button
               type="button"
               className="button"
-              onClick={handleBlogPaginationIncrease}
+              onClick={handleBlogPaginationDecrease}
             >
-              Next page
+              Previous page
             </button>
           )}
-        </React.Fragment>
-      </React.Fragment>
-    </div>
+          <Fragment>
+            {endIndex < blogs.length && (
+              <button
+                type="button"
+                className="button"
+                onClick={handleBlogPaginationIncrease}
+              >
+                Next page
+              </button>
+            )}
+          </Fragment>
+        </Fragment>
+      </div>
+    </Fragment>
   );
 };
 

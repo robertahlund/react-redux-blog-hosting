@@ -126,6 +126,7 @@ class BrowseBlogs extends Component {
 
   sortByDate = (order = "DESC") => {
     const { blogs } = this.props;
+    console.log(blogs);
     this.setState({
       ...this.state,
       sort: {

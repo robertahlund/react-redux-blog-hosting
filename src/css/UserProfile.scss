@@ -1,0 +1,80 @@
+@import "CommentForm.scss";
+@import "App.scss";
+@import "NewBlogPost.scss";
+
+.loader-button-update {
+  @extend .loader-button;
+  left: 17px;
+}
+
+.edit-profile-form {
+  width: 60%;
+  max-width: 768px;
+  margin: $center;
+  padding: 0;
+  position: relative;
+  border-radius: 0 0 4px 4px;
+  box-shadow: $box-shadow;
+  background: #fff;
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    background: $top-gradient-fallback;
+    background: $top-gradient;
+    height: 8px;
+    width: 100%;
+  }
+  form {
+    .update-profile {
+      width: 340px;
+    }
+    display: flex;
+    flex-direction: column;
+    width: 97%;
+    margin: $center;
+    padding: 40px 15px;
+    input,
+    textarea {
+      background: #f3f3f3;
+      border-radius: 4px 4px 0 0;
+      border: none;
+      &:focus {
+        border: none;
+      }
+    }
+    .input-container {
+      position: relative;
+      &:after {
+        content: "";
+        height: 2px;
+        background: $top-gradient-fallback;
+        background: $top-gradient;
+        width: 100%;
+        position: absolute;
+        bottom: 12px;
+        left: 0;
+      }
+    }
+  }
+}
+
+.label {
+  font-weight: 400;
+}
+
+.profile-container {
+  @extend .edit-profile-form;
+  width: 40%;
+  display: flex;
+  ul {
+    list-style: none;
+    width: auto;
+    margin: 0;
+    padding: 25px;
+    li {
+      padding: 10px 0 10px 0;
+    }
+  }
+}
