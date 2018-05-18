@@ -26,10 +26,10 @@
   }
   h1 {
     font-size: 2em;
-    letter-spacing: .01rem;
+    letter-spacing: 0.01rem;
     text-align: center;
     padding: 25px 0;
-    font-weight: 800;
+    font-weight: 700;
   }
   h3 {
     @extend h1;
@@ -81,17 +81,16 @@
     left: 0;
   }
   .time {
+    padding-top: 15px;
     align-self: flex-end;
-    font-size: .9em;
+    font-size: 0.9em;
   }
   .author {
     font-weight: $fat-font-weight;
   }
-
   .content {
     padding: 15px 0 0 0;
   }
-
   h4 {
     font-weight: $fat-font-weight;
     font-size: 1.1em;
@@ -138,7 +137,8 @@
       top: 0;
       left: 0;
     }
-    input, textarea {
+    input,
+    textarea {
       background: #f3f3f3;
       border-radius: 4px 4px 0 0;
       border: none;

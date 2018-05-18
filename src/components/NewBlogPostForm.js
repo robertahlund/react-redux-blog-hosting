@@ -63,7 +63,7 @@ export const NewBlogPostForm = ({
             className="button new-post-button"
           >
             {loading && <span className="loader-button" />}
-            Post
+            {postToEdit ? "Edit" : "Post"}
           </button>
         </form>
       </div>

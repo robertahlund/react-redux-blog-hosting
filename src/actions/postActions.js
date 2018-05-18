@@ -143,8 +143,62 @@ export function editPostSubmit(post, id) {
   };
 }
 
-function postUpdated() {
+export function postUpdated() {
   return {
     type: type.SUBMIT_EDIT_POST
+  };
+}
+
+export function deleteComment(postId, updatedComments) {
+  return async function(dispatch, getState) {
+    const databaseRef = db.collection("posts").doc(postId);
+    try {
+      await databaseRef.update({
+        comments: updatedComments
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(commentDeleted(postId, updatedComments));
+  };
+}
+
+function commentDeleted(postId, updatedComments) {
+  return {
+    type: type.DELETE_COMMENT,
+    postId,
+    updatedComments
+  };
+}
+
+export function commentToBeEdited(comment, index) {
+  return {
+    type: type.COMMENT_TO_BE_EDITED,
+    comment,
+    index
+  };
+}
+
+export function editComment(postId, updatedComments) {
+  //firebase logik för att uppdatera
+  //where post = postId update whole comment array
+  return async function(dispatch, getState) {
+    const databaseRef = db.collection("posts").doc(postId);
+    try {
+      await databaseRef.update({
+        comments: updatedComments
+      });
+      dispatch(commentEdited(postId, updatedComments));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+function commentEdited(postId, updatedComments) {
+  return {
+    type: type.EDIT_COMMENT,
+    postId,
+    updatedComments
   };
 }

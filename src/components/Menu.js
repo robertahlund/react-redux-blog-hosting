@@ -31,7 +31,7 @@ export default class Menu extends Component {
           <ul>
             {auth ? (
               <li>
-                <NavLink to="/new-post/" activeStyle={{ fontWeight: 800 }}>
+                <NavLink to="/new-post/" activeStyle={{ fontWeight: 700 }}>
                   Create new post
                 </NavLink>
               </li>
@@ -40,27 +40,27 @@ export default class Menu extends Component {
               <li>
                 <NavLink
                   to={`/blog/${uid}/${info.blogName}`}
-                  activeStyle={{ fontWeight: 800 }}
+                  activeStyle={{ fontWeight: 700 }}
                 >
                   Show all posts
                 </NavLink>
               </li>
             ) : null}
             <li>
-              <NavLink to={"/browse/"} activeStyle={{ fontWeight: 800 }}>
+              <NavLink to={"/browse/"} activeStyle={{ fontWeight: 700 }}>
                 Browse blogs
               </NavLink>
             </li>
             {auth ? (
               <li>
-                <NavLink to={`/user/${uid}`} activeStyle={{ fontWeight: 800 }}>
+                <NavLink to={`/user/${uid}`} activeStyle={{ fontWeight: 700 }}>
                   Profile
                 </NavLink>
               </li>
             ) : null}
             {!auth ? (
               <li>
-                <NavLink to="/login/" activeStyle={{ fontWeight: 800 }}>
+                <NavLink to="/login/" activeStyle={{ fontWeight: 700 }}>
                   Log in
                 </NavLink>
               </li>

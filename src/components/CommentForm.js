@@ -20,13 +20,29 @@ class CommentForm extends Component {
   static propTypes = {
     auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     postId: PropTypes.string.isRequired,
-    message: PropTypes.object.isRequired
+    message: PropTypes.object.isRequired,
+    commentToEdit: PropTypes.object,
+    handleFeedbackMessage: PropTypes.func.isRequired,
+    comments: PropTypes.array.isRequired
   };
 
   componentDidMount = () => {
+    const { postId } = this.props;
     this.setState({
-      postId: this.props.postId
+      postId: postId
     });
+  };
+
+  componentDidUpdate = prevProps => {
+    const { commentToEdit } = this.props;
+    if (commentToEdit && prevProps.commentToEdit !== commentToEdit) {
+      this.setState({
+        form: {
+          title: commentToEdit.title,
+          content: commentToEdit.content.join("\n")
+        }
+      });
+    }
   };
 
   handleFormChange = event => {
@@ -51,7 +67,7 @@ class CommentForm extends Component {
     this.setState({
       loading: true
     });
-    const { handleFeedbackMessage } = this.props;
+    const { handleFeedbackMessage, commentToEdit } = this.props;
     try {
       await this.validateInputs();
     } catch (error) {
@@ -75,8 +91,31 @@ class CommentForm extends Component {
       authorUid: uid,
       time: new Date().toLocaleString()
     };
-    const { createNewComment } = this.props;
-    await createNewComment(postId, newComment);
+    if (commentToEdit) {
+      const { comments } = this.props;
+      const commentsCopy = JSON.parse(JSON.stringify(comments));
+      const { editComment, postId } = this.props;
+      const { form } = this.state;
+      const updatedComments = commentsCopy.map((comment, index) => {
+        if (index !== commentToEdit.index) {
+          return comment;
+        }
+        return {
+          ...comment,
+          title: form.title,
+          content: form.content.split("\n")
+        };
+      });
+      try {
+        await editComment(postId, updatedComments);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      const { createNewComment } = this.props;
+      await createNewComment(postId, newComment);
+    }
+
     this.setState({
       loading: false,
       form: {
@@ -87,19 +126,22 @@ class CommentForm extends Component {
     handleFeedbackMessage({
       message: {
         type: "success",
-        text: "Your comment was successfully posted."
+        text: `${
+          commentToEdit
+            ? "Your comment was successfully updated."
+            : "Your comment was successfully posted."
+        }`
       }
     });
   };
 
   render() {
-    console.log(this.props);
-    const { auth, message } = this.props;
+    const { auth, message, commentToEdit } = this.props;
     const { loading } = this.state;
     if (auth) {
       return (
         <form>
-          <h3>Post a comment</h3>
+          {commentToEdit ? <h3>Edit a comment</h3> : <h3>Post a comment</h3>}
           <label htmlFor="title">Title</label>
           <div className="input-container">
             <input
@@ -132,7 +174,7 @@ class CommentForm extends Component {
             className="button new-post-button"
           >
             {loading && <span className="loader-button-comment" />}
-            Submit comment
+            {commentToEdit ? "Edit comment" : "Submit comment"}{" "}
           </button>
         </form>
       );

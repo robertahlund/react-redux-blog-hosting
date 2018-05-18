@@ -7,6 +7,13 @@
   cursor: pointer;
 }
 
+.comment-menu {
+  position: absolute;
+  right: 5px;
+  color: $primary-color;
+  cursor: pointer;
+}
+
 .post-menu-container {
   position: absolute;
   right: -200px;
@@ -33,4 +40,9 @@
       padding: 10px 15px;
     }
   }
+}
+
+.comment-menu-container {
+  @extend .post-menu-container;
+  top: 0;
 }

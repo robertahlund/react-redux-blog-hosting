@@ -29,7 +29,8 @@ class Comments extends Component {
   static propTypes = {
     auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     postId: PropTypes.string.isRequired,
-    handleCommentCollapseFromChild: PropTypes.func.isRequired
+    handleCommentCollapseFromChild: PropTypes.func.isRequired,
+    commentToEdit: PropTypes.object
   };
 
   componentDidMount = () => {
@@ -116,7 +117,12 @@ class Comments extends Component {
 
   render() {
     const { loading, comments, commentsToDisplay, message } = this.state;
-    const { auth, postId, handleCommentCollapseFromChild } = this.props;
+    const {
+      auth,
+      postId,
+      handleCommentCollapseFromChild,
+      commentToEdit
+    } = this.props;
     return (
       <div className="comment-section">
         <CommentForm
@@ -125,6 +131,8 @@ class Comments extends Component {
           getComments={this.getComments}
           handleFeedbackMessage={this.handleFeedbackMessage}
           message={message}
+          commentToEdit={commentToEdit}
+          comments={comments}
         />
         <div className="comments">
           <Loading display={loading} />
@@ -133,7 +141,15 @@ class Comments extends Component {
               index >= commentsToDisplay.startIndex &&
               index <= commentsToDisplay.endIndex - 1
             ) {
-              return <CommentDetail comment={comment} key={index} />;
+              return (
+                <CommentDetail
+                  comment={comment}
+                  auth={auth}
+                  index={index}
+                  postId={postId}
+                  key={index}
+                />
+              );
             } else {
               return null;
             }
@@ -160,7 +176,8 @@ function mapStateToProps(state) {
   console.log(state, "COMMENTS.js");
   return {
     allPosts: state.posts.allPosts,
-    allPostsClone: state.posts.allPostsClone
+    allPostsClone: state.posts.allPostsClone,
+    commentToEdit: state.posts.commentToEdit
   };
 }
 

@@ -4,7 +4,8 @@ const initialState = {
   allPosts: [],
   allPostsClone: [],
   searchValue: "",
-  postToEdit: null
+  postToEdit: null,
+  commentToEdit: null
 };
 
 export default function postReducer(state = initialState, action) {
@@ -64,6 +65,56 @@ export default function postReducer(state = initialState, action) {
       return {
         ...state,
         postToEdit: null
+      };
+    case type.DELETE_COMMENT:
+      return {
+        ...state,
+        allPosts: state.allPosts.map(post => {
+          if (post.id !== action.postId) {
+            return post;
+          }
+          return {
+            ...post,
+            comments: [...action.updatedComments]
+          };
+        }),
+        allPostsClone: state.allPostsClone.map(post => {
+          if (post.id !== action.postId) {
+            return post;
+          }
+          return {
+            ...post,
+            comments: [...action.updatedComments]
+          };
+        })
+      };
+    case type.COMMENT_TO_BE_EDITED:
+      return {
+        ...state,
+        commentToEdit: { ...action.comment, index: action.index }
+      };
+    case type.EDIT_COMMENT:
+      return {
+        ...state,
+        commentToEdit: null,
+        allPosts: state.allPosts.map(post => {
+          if (post.id !== action.postId) {
+            return post;
+          }
+          return {
+            ...post,
+            comments: [...action.updatedComments]
+          };
+        }),
+        allPostsClone: state.allPosts.map(post => {
+          if (post.id !== action.postId) {
+            return post;
+          }
+          return {
+            ...post,
+            comments: [...action.updatedComments]
+          };
+        })
       };
     default:
       return state;

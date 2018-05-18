@@ -32,6 +32,7 @@ class NewBlogPost extends Component {
 
   componentDidMount = () => {
     const { postToEdit } = this.props;
+    console.log(this.props);
     if (postToEdit) {
       document.title = "Edit post";
       this.setFormValues(postToEdit);
@@ -43,6 +44,13 @@ class NewBlogPost extends Component {
       author: displayName,
       authorUid: uid
     });
+  };
+
+  componentDidUpdate = () => {
+    const { history, postUpdated, postToEdit } = this.props;
+    if (history.location.pathname === "/new-post/" && postToEdit) {
+      postUpdated();
+    }
   };
 
   setFormValues = post => {
