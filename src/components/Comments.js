@@ -173,7 +173,6 @@ class Comments extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state, "COMMENTS.js");
   return {
     allPosts: state.posts.allPosts,
     allPostsClone: state.posts.allPostsClone,

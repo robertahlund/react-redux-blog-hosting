@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export const BrowseBlogsInfoHeader = ({ sortPosts, sort }) => {
-  console.log(sort.name.sortOrder);
   return (
     <div className="blog-info-row-header">
       <span onClick={() => sortPosts("name", sort.name.sortOrder)}>

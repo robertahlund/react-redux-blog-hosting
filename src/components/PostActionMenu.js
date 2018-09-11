@@ -19,10 +19,7 @@ class PostActionMenu extends React.Component {
   };
 
   handleActionMenu = (event, id) => {
-    console.log(this.state.menuToRender);
-    console.log(event.target);
     if (event.target === event.currentTarget && this.state.menuToRender) {
-      console.log(false);
       this.setState({
         menuToRender: ""
       });

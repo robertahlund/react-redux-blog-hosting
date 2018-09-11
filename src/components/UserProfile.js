@@ -57,7 +57,6 @@ class UserProfile extends Component {
             document.title = `Profile: ${name}`;
           }
         );
-        console.log(user.id, " => ", user.data());
         this.setState(prevState => ({ loading: !prevState.loading }));
       });
     } catch (error) {
@@ -112,7 +111,6 @@ class UserProfile extends Component {
   };
 
   render() {
-    console.log(this.props, "PROPS USERPROFILE");
     const { message, loading, form, saveLoading } = this.state;
     const { auth } = this.props.authentication;
     const { uid } = this.props.match.params;
@@ -141,7 +139,6 @@ class UserProfile extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state, "STATE");
   return {
     authentication: state.authentication
   };

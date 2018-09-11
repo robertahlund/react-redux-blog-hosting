@@ -32,7 +32,6 @@ class NewBlogPost extends Component {
 
   componentDidMount = () => {
     const { postToEdit } = this.props;
-    console.log(this.props);
     if (postToEdit) {
       document.title = "Edit post";
       this.setFormValues(postToEdit);
@@ -86,7 +85,6 @@ class NewBlogPost extends Component {
 
   formatFormValues = () => {
     const formValues = this.state.form;
-    console.log(formValues.tags);
     formValues.tags = formValues.tags
       .trim()
       .split(/\s*#[#\s]*/)
@@ -94,7 +92,6 @@ class NewBlogPost extends Component {
       .toLowerCase()
       .split("#");
     formValues.tags.splice(0, 1);
-    console.log(formValues.tags);
     formValues.content.indexOf("\n") > -1
       ? (formValues.content = formValues.content.split("\n"))
       : (formValues.content = [formValues.content]);
@@ -198,7 +195,6 @@ class NewBlogPost extends Component {
   render() {
     const { message, loading, form } = this.state;
     const { postToEdit } = this.props;
-    console.log(this.props);
     return (
       <NewBlogPostForm
         handleFormChange={this.handleFormChange}

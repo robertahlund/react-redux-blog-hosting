@@ -1,12 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-export const CommentActionMenuContent = ({
-  auth,
-  deleteComment,
-  editComment
-}) => {
-  const { uid } = auth;
+export const CommentActionMenuContent = ({ deleteComment, editComment }) => {
   return (
     <div className="comment-menu-container">
       <ul>
@@ -20,7 +15,6 @@ export const CommentActionMenuContent = ({
 };
 
 CommentActionMenuContent.propTypes = {
-  auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
   deleteComment: PropTypes.func.isRequired,
   editComment: PropTypes.func.isRequired
 };

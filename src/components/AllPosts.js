@@ -26,7 +26,13 @@ class AllPosts extends Component {
   searchInput = React.createRef();
 
   static propTypes = {
-    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    fetchAllPosts: PropTypes.func.isRequired,
+    allPosts: PropTypes.array.isRequired,
+    allPostsClone: PropTypes.array.isRequired,
+    filterPosts: PropTypes.func.isRequired,
+    displayAllPosts: PropTypes.func.isRequired,
+    searchValue: PropTypes.string
   };
 
   componentDidMount = async () => {
@@ -54,7 +60,6 @@ class AllPosts extends Component {
   };
 
   componentDidUpdate = async prevProps => {
-    //URL has changed
     if (this.props.location.pathname !== prevProps.location.pathname) {
       this.setState({
         loading: true
@@ -179,7 +184,6 @@ class AllPosts extends Component {
   };
 
   render() {
-    //console.log(this.props, "PROPS ALLPOSTS");
     const { blogName } = this.state.currentBlogData;
     const {
       searchResultLength,
@@ -235,7 +239,6 @@ class AllPosts extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state, "STATE");
   return {
     allPosts: state.posts.allPosts,
     allPostsClone: state.posts.allPostsClone,

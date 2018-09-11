@@ -33,6 +33,9 @@ class CommentForm extends Component {
     });
   };
 
+  //TODO om du kollar på någon annans profil, och sedan trycker för att redigera din egen profil så kommmer den
+  // föregåendes profilinfoermation vara ifylld
+
   componentDidUpdate = prevProps => {
     const { commentToEdit } = this.props;
     if (commentToEdit && prevProps.commentToEdit !== commentToEdit) {
@@ -183,7 +186,6 @@ class CommentForm extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state, "STATE");
   return {
     allPosts: state.posts.allPosts,
     allPostsClone: state.posts.allPostsClone

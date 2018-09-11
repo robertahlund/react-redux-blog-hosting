@@ -5,7 +5,6 @@ const initialState = {
 };
 
 export default function authReducer(state = initialState, action) {
-  //console.log(state, "state i auth reducer");
   switch (action.type) {
     case type.USER_LOG_IN:
       return {

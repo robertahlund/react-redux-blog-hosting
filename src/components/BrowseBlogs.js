@@ -33,6 +33,13 @@ class BrowseBlogs extends Component {
     }
   };
 
+  static propTypes = {
+    fetchAllBlogs: PropTypes.func.isRequired,
+    blogs: PropTypes.array.isRequired,
+    sortByName: PropTypes.func.isRequired,
+    sortByAuthor: PropTypes.func.isRequired
+  };
+
   componentDidMount = async () => {
     document.title = "Browse blogs";
     const { fetchAllBlogs } = this.props;
@@ -125,8 +132,7 @@ class BrowseBlogs extends Component {
   };
 
   sortByDate = (order = "DESC") => {
-    const { blogs } = this.props;
-    console.log(blogs);
+    //const { blogs } = this.props;
     this.setState({
       ...this.state,
       sort: {
@@ -158,7 +164,6 @@ class BrowseBlogs extends Component {
     const { blogs } = this.props;
     const { loading, blogsToDisplay, sort } = this.state;
     const { startIndex, endIndex, currentPage, totalPages } = blogsToDisplay;
-    console.log(blogs);
     return (
       <section className="all-blogs">
         <Header iconName="jam jam-book" headerText="Browse blogs" />
@@ -192,11 +197,6 @@ class BrowseBlogs extends Component {
     );
   }
 }
-
-BrowseBlogs.propTypes = {
-  fetchAllBlogs: PropTypes.func.isRequired,
-  blogs: PropTypes.array.isRequired
-};
 
 function mapStateToProps(state) {
   return {

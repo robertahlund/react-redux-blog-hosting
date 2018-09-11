@@ -14,9 +14,7 @@ export function fetchAllBlogs() {
         const userData = doc.data();
         userData.id = doc.id;
         allBlogs.push(userData);
-        //console.log(doc.id, " => ", doc.data());
       });
-      console.log(allBlogs);
       dispatch(allBlogsFetched(allBlogs));
     } catch (error) {
       console.log(error);

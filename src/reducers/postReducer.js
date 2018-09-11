@@ -9,7 +9,6 @@ const initialState = {
 };
 
 export default function postReducer(state = initialState, action) {
-  //console.log(state, "state i post reducer");
   switch (action.type) {
     case type.FETCH_ALL_POSTS:
       return {

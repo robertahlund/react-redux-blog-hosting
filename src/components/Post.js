@@ -25,7 +25,6 @@ export default class Post extends Component {
       });
     } else {
       const toggleCommentsWithThisId = target.getAttribute("data-post-id");
-      console.log(toggleCommentsWithThisId);
       this.setState({
         commentsToLoad: toggleCommentsWithThisId
       });

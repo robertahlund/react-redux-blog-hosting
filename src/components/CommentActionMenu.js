@@ -23,8 +23,9 @@ class CommentActionMenu extends Component {
   };
 
   handleActionMenu = event => {
-    if (event.target === event.currentTarget && this.state.menuToRender) {
-      console.log(false);
+    const { target, currentTarget } = event;
+    const { menuToRender } = this.state;
+    if (target === currentTarget && menuToRender) {
       this.setState({
         menuToRender: false
       });
@@ -45,12 +46,12 @@ class CommentActionMenu extends Component {
     sortByTime.map((comment, i) => {
       if (i === index) {
         return sortByTime.splice(i, 1);
+      } else {
+        return false;
       }
     });
-    const updatedComments = sortByTime;
-    console.log(sortByTime);
     try {
-      await deleteComment(postId, updatedComments);
+      await deleteComment(postId, sortByTime);
     } catch (error) {
       console.log(error);
     }
@@ -60,19 +61,14 @@ class CommentActionMenu extends Component {
   };
 
   editComment = () => {
-    // const { history, editPost, post } = this.props;
-    // editPost(post);
-    // history.push("/edit-post/");
     const { commentToBeEdited, comment, index } = this.props;
     commentToBeEdited(comment, index);
-
     this.setState({
       menuToRender: ""
     });
   };
 
   render() {
-    const { auth } = this.props;
     const { menuToRender } = this.state;
     return (
       <Fragment>
@@ -82,7 +78,6 @@ class CommentActionMenu extends Component {
         />
         {menuToRender && (
           <CommentActionMenuContent
-            auth={auth}
             deleteComment={this.deleteComment}
             editComment={this.editComment}
           />

@@ -10,7 +10,6 @@ export function displayAllPosts() {
 }
 
 function allPostsRetrieved(allPosts, allPostsClone) {
-  console.log("ALL POSTS RETRIEVED");
   return {
     type: type.FETCH_ALL_POSTS,
     allPosts,
@@ -29,12 +28,10 @@ export function fetchAllPosts(uid) {
         const postData = doc.data();
         postData.id = doc.id;
         allPosts.push(postData);
-        //console.log(doc.id, " => ", doc.data());
       });
       const sortByTime = allPosts.sort(
         (a, b) => new Date(b.time) - new Date(a.time)
       );
-      console.log(sortByTime, "FIREBASE I REDUCER");
       const allPostsClone = JSON.parse(JSON.stringify(sortByTime));
       dispatch(allPostsRetrieved(allPosts, allPostsClone));
     } catch (error) {
@@ -55,8 +52,7 @@ export function createNewBlogPost(formValues) {
   return async function(dispatch, getState) {
     const databaseRef = db.collection("posts");
     try {
-      const result = await databaseRef.add(formValues);
-      console.log("Document written with ID: ", result.id, result);
+      await databaseRef.add(formValues);
       dispatch(newBlogPostCreated(formValues));
     } catch (error) {
       console.log(error);
@@ -72,14 +68,11 @@ function newBlogPostCreated(formValues) {
 }
 
 export function createNewComment(postId, newComment) {
-  console.log(postId, newComment, "action");
   return async function(dispatch, getState) {
-    console.log(postId, newComment, "action");
     const databaseRef = db.collection("posts").doc(postId);
     try {
       const querySnapshot = await databaseRef.get();
       const allComments = [...querySnapshot.data().comments, newComment];
-      console.log(allComments);
       await databaseRef.update({
         comments: allComments
       });
@@ -111,7 +104,6 @@ export function deleteBlogPost(id) {
 }
 
 function blogPostDeleted(id) {
-  console.log("del");
   return {
     type: type.DELETE_POST,
     id
@@ -126,7 +118,6 @@ export function editPost(post) {
 }
 
 export function editPostSubmit(post, id) {
-  console.log(post, id);
   return async function(dispatch, getState) {
     const databaseRef = db.collection("posts").doc(id);
     try {
@@ -180,8 +171,6 @@ export function commentToBeEdited(comment, index) {
 }
 
 export function editComment(postId, updatedComments) {
-  //firebase logik för att uppdatera
-  //where post = postId update whole comment array
   return async function(dispatch, getState) {
     const databaseRef = db.collection("posts").doc(postId);
     try {

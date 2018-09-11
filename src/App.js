@@ -23,7 +23,6 @@ db.settings(settings);
 
 class App extends Component {
   componentDidMount = async () => {
-    console.log(this.props, "props");
     await this.setAuthObserver();
   };
 
